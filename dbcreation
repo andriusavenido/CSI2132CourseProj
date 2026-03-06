@@ -1,0 +1,161 @@
+-- =========================
+-- CORE TABLES
+-- =========================
+
+CREATE TABLE Hotel_Chain (
+    chain_id SERIAL PRIMARY KEY,
+    street VARCHAR(255),
+    city VARCHAR(100),
+    zip_code VARCHAR(20),
+    country VARCHAR(100),
+    number_of_hotels INTEGER NOT NULL CHECK (number_of_hotels >= 0)
+);
+
+CREATE TABLE Employee (
+    employee_id SERIAL PRIMARY KEY,
+    ssn_sin VARCHAR(255) UNIQUE NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    zip_code VARCHAR(255),
+    country VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Customer (
+    customer_id SERIAL PRIMARY KEY,
+    phone_number VARCHAR(255) UNIQUE NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    street VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    zip_code VARCHAR(255) NOT NULL,
+    country VARCHAR(255) NOT NULL,
+    ssn_sin VARCHAR(255) NOT NULL,
+    id_type VARCHAR(255) NOT NULL,
+    date_of_registration VARCHAR(255) NOT NULL
+);
+
+-- =========================
+-- HOTEL
+-- =========================
+
+CREATE TABLE Hotel (
+    hotel_id SERIAL PRIMARY KEY,
+    chain_id INTEGER,
+    rating INTEGER,
+    street VARCHAR(255),
+    city VARCHAR(100),
+    zip_code VARCHAR(20),
+    country VARCHAR(100),
+    email_address VARCHAR(255) NOT NULL,
+    manager_id INTEGER,
+
+    FOREIGN KEY (chain_id) REFERENCES Hotel_Chain(chain_id),
+    FOREIGN KEY (manager_id) REFERENCES Employee(employee_id)
+);
+
+-- =========================
+-- CONTACT INFO
+-- =========================
+
+CREATE TABLE Chain_Numbers (
+    chain_id INTEGER,
+    phone_number VARCHAR(20) NOT NULL,
+
+    PRIMARY KEY (chain_id, phone_number),
+    FOREIGN KEY (chain_id) REFERENCES Hotel_Chain(chain_id)
+);
+
+CREATE TABLE Chain_Email (
+    chain_id INTEGER,
+    email_address VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (chain_id, email_address),
+    FOREIGN KEY (chain_id) REFERENCES Hotel_Chain(chain_id)
+);
+
+CREATE TABLE Hotel_Numbers (
+    hotel_id INTEGER,
+    phone_number VARCHAR(20) NOT NULL,
+
+    PRIMARY KEY (hotel_id, phone_number),
+    FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id)
+);
+
+-- =========================
+-- ROOMS
+-- =========================
+
+CREATE TABLE Room (
+    hotel_id INTEGER,
+    room_number VARCHAR(4),
+    price INTEGER,
+    amenities VARCHAR(255),
+    capacity INTEGER,
+    room_view VARCHAR(255),
+    bed_extension BOOLEAN,
+
+    PRIMARY KEY (hotel_id, room_number),
+    FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id)
+);
+
+CREATE TABLE Room_Damages (
+    hotel_id INTEGER,
+    room_number VARCHAR(4),
+    damage_type VARCHAR(255) NOT NULL,
+
+    PRIMARY KEY (hotel_id, room_number, damage_type),
+    FOREIGN KEY (hotel_id, room_number)
+        REFERENCES Room(hotel_id, room_number)
+);
+
+-- =========================
+-- BOOKINGS & RENTING
+-- =========================
+
+CREATE TABLE Booking (
+    booking_id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
+    room_number VARCHAR(4) NOT NULL,
+    hotel_id INTEGER NOT NULL,
+    price DECIMAL NOT NULL CHECK (price > 0),
+    status VARCHAR(20) NOT NULL,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (hotel_id, room_number)
+        REFERENCES Room(hotel_id, room_number),
+
+    CHECK (status IN ('Booked', 'Cancelled', 'Completed'))
+);
+
+CREATE TABLE Renting (
+    renting_id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
+    room_number VARCHAR(4) NOT NULL,
+    hotel_id INTEGER NOT NULL,
+    price DECIMAL NOT NULL CHECK (price > 0),
+
+    check_in_date VARCHAR NOT NULL,
+    check_out_date VARCHAR,
+
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (hotel_id, room_number)
+        REFERENCES Room(hotel_id, room_number)
+);
+
+CREATE TABLE Works_On (
+    employee_id INTEGER,
+    renting_id INTEGER,
+    last_modified TIMESTAMP,
+
+    PRIMARY KEY (employee_id, renting_id),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id),
+    FOREIGN KEY (renting_id) REFERENCES Renting(renting_id)
+);
+
+CREATE TABLE Employee_Positions (
+    employee_id INTEGER,
+    role_positions VARCHAR(100) NOT NULL,
+
+    PRIMARY KEY (employee_id, role_positions),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+);
