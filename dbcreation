@@ -115,7 +115,10 @@ CREATE TABLE Room_Damages (
 CREATE TABLE Booking (
     booking_id SERIAL PRIMARY KEY,
     customer_id INTEGER,
+    customer_name VARCHAR NOT NULL,
     room_number VARCHAR(4) NOT NULL,
+    hotel_chain VARCHAR NOT NULL,
+    hotel VARCHAR NOT NULL,
     hotel_id INTEGER NOT NULL,
     price DECIMAL NOT NULL CHECK (price > 0),
     status VARCHAR(20) NOT NULL,
@@ -130,6 +133,9 @@ CREATE TABLE Booking (
 CREATE TABLE Renting (
     renting_id SERIAL PRIMARY KEY,
     customer_id INTEGER,
+    customer_name VARCHAR NOT NULL,
+    hotel VARCHAR NOT NULL,
+    hotel_chain VARCHAR NOT NULL,
     room_number VARCHAR(4) NOT NULL,
     hotel_id INTEGER NOT NULL,
     price DECIMAL NOT NULL CHECK (price > 0),
