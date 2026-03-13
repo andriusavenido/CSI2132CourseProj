@@ -1,0 +1,45 @@
+#1 AVG ROOM PRICE
+
+SELECT 
+    h.hotel_id,
+    h.city,
+    AVG(r.price) AS average_room_price
+FROM Hotel h
+JOIN Room r ON h.hotel_id = r.hotel_id
+GROUP BY h.hotel_id, h.city
+ORDER BY average_room_price DESC;
+
+#2 Find Hotels that have rooms bigger than the average capacity
+
+SELECT hotel_id, room_number, capacity
+FROM Room
+WHERE capacity > (
+    SELECT AVG(capacity)
+    FROM Room
+);
+
+#3 Show Employees working at each hotelS
+
+SELECT 
+    e.full_name,
+    ep.role_positions,
+    e.hotel_id
+FROM Employee e
+JOIN Employee_Positions ep 
+ON e.employee_id = ep.employee_id
+ORDER BY e.hotel_id;
+
+#4 Show all damaged rooms based on hotel
+
+SELECT 
+    h.hotel_id,
+    h.city,
+    r.room_number,
+    d.damage_type
+FROM Room_Damages d
+JOIN Room r 
+ON d.hotel_id = r.hotel_id 
+AND d.room_number = r.room_number
+JOIN Hotel h 
+ON r.hotel_id = h.hotel_id
+ORDER BY h.hotel_id;
