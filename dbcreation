@@ -1,6 +1,7 @@
 -- =========================
 -- CORE TABLES
 -- =========================
+SET search_path TO hotelapp;
 
 CREATE TABLE Hotel_Chain (
     chain_id SERIAL PRIMARY KEY,
@@ -8,6 +9,7 @@ CREATE TABLE Hotel_Chain (
     city VARCHAR(100),
     zip_code VARCHAR(20),
     country VARCHAR(100),
+    chain_name VARCHAR(100),
     number_of_hotels INTEGER NOT NULL CHECK (number_of_hotels >= 0)
 );
 
@@ -18,7 +20,10 @@ CREATE TABLE Employee (
     street VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     zip_code VARCHAR(255),
-    country VARCHAR(255) NOT NULL
+    country VARCHAR(255) NOT NULL,
+    hotel_id INTEGER,
+    FOREIGN KEY (hotel_id) REFERENCES Hotel(hotel_id),
+
 );
 
 CREATE TABLE Customer (
