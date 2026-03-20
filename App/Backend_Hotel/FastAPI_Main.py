@@ -66,6 +66,7 @@ def root():
 # ------------------------------------------------------------------------------
 
 
+# Insert endpoints for creating
 @app.post("/customer", tags=["Customer"], status_code=201)
 def create_customer(customer: CustomerCreate):
     """Create a new customer record."""
@@ -102,6 +103,7 @@ def create_room(room: RoomCreate):
     return {"message": "Room created successfully", "room": room}
 
 
+# Update endpoints for Hotel, Employee, Customer, Room
 @app.get("/hotels", tags=["Hotel"])
 def list_hotels():
     """List all hotels."""
@@ -129,6 +131,25 @@ def get_employee_bookings(hotel_id: int):
     return {"hotel_id": hotel_id, "bookings": []}
 
 
+@app.get("/custom_view/hotel_capacity", tags=["Custom View"])
+def get_hotel_capacity():
+    """Get the capacity of all hotels."""
+
+    # TODO: Implement actual database function to retrieve the hotel capacity view
+
+    return {"hotels": []}
+
+
+@app.get("/custom_view/available_rooms", tags=["Custom View"])
+def get_available_rooms():
+    """Get the available rooms for all hotels."""
+
+    # TODO: Implement actual database function to retrieve the available rooms view
+
+    return {"hotels": []}
+
+
+# Delete endpoints for Hotel, Employee, Customer, Room
 @app.post("/delete_customer", tags=["Customer"])
 def delete_customer(customer_id: int):
     """Delete a customer by ID."""
