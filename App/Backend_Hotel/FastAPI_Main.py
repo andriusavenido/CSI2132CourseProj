@@ -103,7 +103,7 @@ def create_room(room: RoomCreate):
     return {"message": "Room created successfully", "room": room}
 
 
-# Update endpoints for Hotel, Employee, Customer, Room
+# Get view endpoints for Hotel, Employee, Customer, Room
 @app.get("/hotels", tags=["Hotel"])
 def list_hotels():
     """List all hotels."""
@@ -188,6 +188,7 @@ def delete_room(room_id: int):
     return {"message": "Room deleted successfully", "room_id": room_id}
 
 
+# Update endpoints for Hotel, Employee, Customer, Room
 @app.post("/update_customer/{customer_id}", tags=["Customer"])
 def update_customer(customer_id: int, customer: CustomerCreate):
     """Update a customer by ID."""
