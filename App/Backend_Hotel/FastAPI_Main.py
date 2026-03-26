@@ -71,7 +71,7 @@ def root():
 def create_customer(customer: CustomerCreate):
     """Create a new customer record."""
 
-    # TODO: Implement actual database function to save the customer
+    new_customer =  await insert_customer(customer)
 
     return {"message": "Customer created successfully", "customer": customer}
 
