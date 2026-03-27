@@ -13,3 +13,5 @@ async def init_db_pool():
         min_size=1,
         max_size=10
     )
+
+if_ __name__ == "__main__":
