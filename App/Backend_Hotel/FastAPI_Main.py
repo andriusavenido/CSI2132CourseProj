@@ -3,8 +3,23 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from logging import getLogger
 from datetime import datetime, timezone
-from Models import CustomerCreate, EmployeeCreate, HotelCreate, RoomCreate
-from SQL_Service import insert_customer, init_db_pool
+from Models import (
+    CustomerCreate,
+    EmployeeCreate,
+    HotelCreate,
+    RoomCreate,
+    RentingCreate,
+    BookingCreate,
+)
+from App.Backend_Hotel.SQL_Service_Insert import (
+    insert_customer,
+    init_db_pool,
+    insert_employee,
+    insert_hotel,
+    insert_room,
+    book_room,
+    rent_room,
+)
 
 
 logger = getLogger(__name__)
@@ -15,7 +30,6 @@ startup_time: datetime | None = None
 # ------------------------------------------------------------------------------
 # Application Lifespan
 # ------------------------------------------------------------------------------
-
 
 
 @asynccontextmanager
@@ -84,35 +98,62 @@ async def create_customer(customer: CustomerCreate):
 async def create_employee(employee: EmployeeCreate):
     """Create a new employee record."""
 
-    # TODO: Implement actual database function to save the employee
+    new_employee = await insert_employee(employee)
 
-    return {"message": "Employee created successfully", "employee": employee}
+    return {"message": "Employee created successfully", "employee": new_employee}
 
 
 @app.post("/hotel", tags=["Hotel"], status_code=201)
 async def create_hotel(hotel: HotelCreate):
     """Create a new hotel record."""
 
-    # TODO: Implement actual database function to save the hotel
+    new_hotel = await insert_hotel(hotel)
 
-    return {"message": "Hotel created successfully", "hotel": hotel}
+    return {"message": "Hotel created successfully", "hotel": new_hotel}
 
 
 @app.post("/room", tags=["Room"], status_code=201)
 async def create_room(room: RoomCreate):
     """Create a new room record."""
 
-    # TODO: Implement actual database function to save the room
+    new_room = await insert_room(room)
 
-    return {"message": "Room created successfully", "room": room}
+    return {"message": "Room created successfully", "room": new_room}
 
 
-# Get view endpoints for Hotel, Employee, Customer, Room
+@app.post("/rent_room", tags=["Renting"], status_code=201)
+async def rent_room(rental: RentingCreate):
+    """Rent a room."""
+
+    new_rental = await rent_room(rental)
+
+    return {"message": "Room rented successfully", "rental": new_rental}
+
+
+@app.post("/book_room", tags=["Booking"], status_code=201)
+async def book_room(booking: BookingCreate):
+    """Book a room."""
+
+    new_booking = await book_room(booking)
+
+    return {"message": "Room booked successfully", "booking": new_booking}
+
+
+# Get view endpoints for Hotel, Employee, Customer, Room, Booking, Renting, Chain
+@app.get("/chains", tags=["Chain"])
+async def list_chains():
+    """List all hotel chains."""
+
+    # TODO: Implement actual database function to retrieve the hotel chains from the database
+
+    return {"chains": []}
+
+
 @app.get("/hotels", tags=["Hotel"])
 async def list_hotels():
     """List all hotels."""
 
-    # TODO: Implement actual database function to retrieve the hotels view from the database
+    # TODO: Implement actual database function to retrieve the hotels from the database
 
     return {"hotels": []}
 
@@ -135,22 +176,22 @@ async def get_employee_bookings(hotel_id: int):
     return {"hotel_id": hotel_id, "bookings": []}
 
 
-@app.get("/custom_view/hotel_capacity", tags=["Custom View"])
-async def get_hotel_capacity():
-    """Get the capacity of all hotels."""
+@app.get("/employees/renting/{hotel_id}", tags=["Employee"])
+async def get_employee_rentings(hotel_id: int):
+    """Get rentings for a specific hotel by ID."""
 
-    # TODO: Implement actual database function to retrieve the hotel capacity view
+    # TODO: Implement actual database function to retrieve the employee rentings for the hotel
 
-    return {"hotels": []}
+    return {"hotel_id": hotel_id, "rentings": []}
 
 
-@app.get("/custom_view/available_rooms", tags=["Custom View"])
-async def get_available_rooms():
-    """Get the available rooms for all hotels."""
+@app.get("/customers/booking/{customer_id}", tags=["Customer"])
+async def get_customer_bookings(customer_id: int):
+    """Get bookings for a specific customer by ID."""
 
-    # TODO: Implement actual database function to retrieve the available rooms view
+    # TODO: Implement actual database function to retrieve the customer bookings
 
-    return {"hotels": []}
+    return {"customer_id": customer_id, "bookings": []}
 
 
 # Delete endpoints for Hotel, Employee, Customer, Room
@@ -242,6 +283,19 @@ async def update_room(room_id: int, room: RoomCreate):
         "message": "Room updated successfully",
         "room_id": room_id,
         "room": room,
+    }
+
+
+@app.post("/update_booking/{booking_id}", tags=["Booking"])
+async def update_booking(booking_id: int, booking: BookingCreate):
+    """Update a booking by ID."""
+
+    # TODO: Implement actual database function to update the booking to renting from employee
+
+    return {
+        "message": "Booking updated to renting successfully",
+        "booking_id": booking_id,
+        "booking": booking,
     }
 
 
