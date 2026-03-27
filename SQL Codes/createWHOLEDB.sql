@@ -170,3 +170,33 @@ CREATE TABLE Employee_Positions (
     PRIMARY KEY (employee_id, role_positions),
     FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
 );
+
+// ARCHIVED TABLES FOR HISTORICAL DATA
+
+CREATE TABLE Archive_Booking (
+    booking_id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
+    customer_name VARCHAR NOT NULL,
+    room_number VARCHAR(4) NOT NULL,
+    hotel_chain VARCHAR NOT NULL,
+    hotel VARCHAR NOT NULL,
+    hotel_id INTEGER NOT NULL,
+    price DECIMAL NOT NULL CHECK (price > 0),
+    status VARCHAR(20) NOT NULL,
+    CHECK (status IN ('Booked', 'Cancelled', 'Completed'))
+);
+
+CREATE TABLE Archive_Renting (
+    renting_id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
+    customer_name VARCHAR NOT NULL,
+    hotel VARCHAR NOT NULL,
+    hotel_chain VARCHAR NOT NULL,
+    room_number VARCHAR(4) NOT NULL,
+    hotel_id INTEGER NOT NULL,
+    price DECIMAL NOT NULL CHECK (price > 0),
+
+    check_in_date VARCHAR NOT NULL,
+    check_out_date VARCHAR,
+        REFERENCES Room(hotel_id, room_number)
+);
