@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from logging import getLogger
 from datetime import datetime, timezone
 from Models import CustomerCreate, EmployeeCreate, HotelCreate, RoomCreate
+from SQL_Service import insert_customer, init_db_pool
 
 
 logger = getLogger(__name__)
@@ -16,11 +17,14 @@ startup_time: datetime | None = None
 # ------------------------------------------------------------------------------
 
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global startup_time
     startup_time = datetime.now(timezone.utc)
     logger.info("Application started at %s", startup_time.isoformat())
+    # Initialize the asyncpg pool
+    await init_db_pool()
     yield
     logger.info("Application shutting down")
 
@@ -68,16 +72,16 @@ def root():
 
 # Insert endpoints for creating
 @app.post("/customer", tags=["Customer"], status_code=201)
-def create_customer(customer: CustomerCreate):
+async def create_customer(customer: CustomerCreate):
     """Create a new customer record."""
 
-    new_customer =  await insert_customer(customer)
+    new_customer = await insert_customer(customer)
 
-    return {"message": "Customer created successfully", "customer": customer}
+    return {"message": "Customer created successfully", "customer": new_customer}
 
 
 @app.post("/employee", tags=["Employee"], status_code=201)
-def create_employee(employee: EmployeeCreate):
+async def create_employee(employee: EmployeeCreate):
     """Create a new employee record."""
 
     # TODO: Implement actual database function to save the employee
@@ -86,7 +90,7 @@ def create_employee(employee: EmployeeCreate):
 
 
 @app.post("/hotel", tags=["Hotel"], status_code=201)
-def create_hotel(hotel: HotelCreate):
+async def create_hotel(hotel: HotelCreate):
     """Create a new hotel record."""
 
     # TODO: Implement actual database function to save the hotel
@@ -95,7 +99,7 @@ def create_hotel(hotel: HotelCreate):
 
 
 @app.post("/room", tags=["Room"], status_code=201)
-def create_room(room: RoomCreate):
+async def create_room(room: RoomCreate):
     """Create a new room record."""
 
     # TODO: Implement actual database function to save the room
@@ -105,7 +109,7 @@ def create_room(room: RoomCreate):
 
 # Get view endpoints for Hotel, Employee, Customer, Room
 @app.get("/hotels", tags=["Hotel"])
-def list_hotels():
+async def list_hotels():
     """List all hotels."""
 
     # TODO: Implement actual database function to retrieve the hotels view from the database
@@ -114,7 +118,7 @@ def list_hotels():
 
 
 @app.get("/hotels/rooms/{hotel_id}", tags=["Hotel"])
-def get_hotel(hotel_id: int):
+async def get_hotel(hotel_id: int):
     """Get details of a specific hotel by ID."""
 
     # TODO: Implement actual database function to retrieve the hotel's rooms
@@ -123,7 +127,7 @@ def get_hotel(hotel_id: int):
 
 
 @app.get("/employees/booking/{hotel_id}", tags=["Employee"])
-def get_employee_bookings(hotel_id: int):
+async def get_employee_bookings(hotel_id: int):
     """Get bookings for a specific hotel by ID."""
 
     # TODO: Implement actual database function to retrieve the employee bookings for the hotel
@@ -132,7 +136,7 @@ def get_employee_bookings(hotel_id: int):
 
 
 @app.get("/custom_view/hotel_capacity", tags=["Custom View"])
-def get_hotel_capacity():
+async def get_hotel_capacity():
     """Get the capacity of all hotels."""
 
     # TODO: Implement actual database function to retrieve the hotel capacity view
@@ -141,7 +145,7 @@ def get_hotel_capacity():
 
 
 @app.get("/custom_view/available_rooms", tags=["Custom View"])
-def get_available_rooms():
+async def get_available_rooms():
     """Get the available rooms for all hotels."""
 
     # TODO: Implement actual database function to retrieve the available rooms view
@@ -151,7 +155,7 @@ def get_available_rooms():
 
 # Delete endpoints for Hotel, Employee, Customer, Room
 @app.post("/delete_customer", tags=["Customer"])
-def delete_customer(customer_id: int):
+async def delete_customer(customer_id: int):
     """Delete a customer by ID."""
 
     # TODO: Implement actual database function to delete the customer
@@ -160,7 +164,7 @@ def delete_customer(customer_id: int):
 
 
 @app.post("/delete_employee/{employee_id}", tags=["Employee"])
-def delete_employee(employee_id: int):
+async def delete_employee(employee_id: int):
     """Delete an employee by ID."""
 
     # TODO: Implement actual database function to delete the employee
@@ -170,7 +174,7 @@ def delete_employee(employee_id: int):
 
 
 @app.post("/delete_hotel/{hotel_id}", tags=["Hotel"])
-def delete_hotel(hotel_id: int):
+async def delete_hotel(hotel_id: int):
     """Delete a hotel by ID."""
 
     # TODO: Implement actual database function to delete the hotel
@@ -180,7 +184,7 @@ def delete_hotel(hotel_id: int):
 
 
 @app.post("/delete_room/{room_id}", tags=["Room"])
-def delete_room(room_id: int):
+async def delete_room(room_id: int):
     """Delete a room by ID."""
 
     # TODO: Implement actual database function to delete the room
@@ -190,7 +194,7 @@ def delete_room(room_id: int):
 
 # Update endpoints for Hotel, Employee, Customer, Room
 @app.post("/update_customer/{customer_id}", tags=["Customer"])
-def update_customer(customer_id: int, customer: CustomerCreate):
+async def update_customer(customer_id: int, customer: CustomerCreate):
     """Update a customer by ID."""
 
     # TODO: Implement actual database function to update the customer
@@ -203,7 +207,7 @@ def update_customer(customer_id: int, customer: CustomerCreate):
 
 
 @app.post("/update_employee/{employee_id}", tags=["Employee"])
-def update_employee(employee_id: int, employee: EmployeeCreate):
+async def update_employee(employee_id: int, employee: EmployeeCreate):
     """Update an employee by ID."""
 
     # TODO: Implement actual database function to update the employee
@@ -216,7 +220,7 @@ def update_employee(employee_id: int, employee: EmployeeCreate):
 
 
 @app.post("/update_hotel/{hotel_id}", tags=["Hotel"])
-def update_hotel(hotel_id: int, hotel: HotelCreate):
+async def update_hotel(hotel_id: int, hotel: HotelCreate):
     """Update a hotel by ID."""
 
     # TODO: Implement actual database function to update the hotel
@@ -229,7 +233,7 @@ def update_hotel(hotel_id: int, hotel: HotelCreate):
 
 
 @app.post("/update_room/{room_id}", tags=["Room"])
-def update_room(room_id: int, room: RoomCreate):
+async def update_room(room_id: int, room: RoomCreate):
     """Update a room by ID."""
 
     # TODO: Implement actual database function to update the room
@@ -239,3 +243,9 @@ def update_room(room_id: int, room: RoomCreate):
         "room_id": room_id,
         "room": room,
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=5000)
