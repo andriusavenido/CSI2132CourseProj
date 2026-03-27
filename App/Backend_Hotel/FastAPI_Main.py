@@ -4,6 +4,7 @@ from contextlib import asynccontextmanager
 from logging import getLogger
 from datetime import datetime, timezone
 from Models import CustomerCreate, EmployeeCreate, HotelCreate, RoomCreate
+from SQL_Service import insert_customer
 
 
 logger = getLogger(__name__)
@@ -73,7 +74,7 @@ async def create_customer(customer: CustomerCreate):
 
     new_customer = await insert_customer(customer)
 
-    return {"message": "Customer created successfully", "customer": customer}
+    return {"message": "Customer created successfully", "customer": new_customer}
 
 
 @app.post("/employee", tags=["Employee"], status_code=201)
