@@ -233,9 +233,9 @@ async def get_customer_bookings(customer_id: int):
 async def delete_booking(booking_id: int):
     """Delete a booking by ID."""
 
-    delete_booking = await delete_booking(booking_id)
+    new_delete_booking = await delete_booking(booking_id)
 
-    return {"message": "Booking deleted successfully", "booking_id": delete_booking}
+    return {"message": "Booking deleted successfully", "booking_id": new_delete_booking}
 
 
 # Update endpoints for Hotel, Employee, Customer, Room
@@ -243,12 +243,12 @@ async def delete_booking(booking_id: int):
 async def update_customer(customer_id: int, customer: CustomerCreate):
     """Update a customer by ID."""
 
-    update_customer = await update_customer(customer_id, customer)
+    new_update_customer = await update_customer(customer_id, customer)
 
     return {
         "message": "Customer updated successfully",
         "customer_id": customer_id,
-        "customer": customer,
+        "customer": new_update_customer,
     }
 
 
@@ -256,12 +256,12 @@ async def update_customer(customer_id: int, customer: CustomerCreate):
 async def update_employee(employee_id: int, employee: EmployeeCreate):
     """Update an employee by ID."""
 
-    update_employee = await update_employee(employee_id, employee)
+    new_update_employee = await update_employee(employee_id, employee)
 
     return {
         "message": "Employee updated successfully",
         "employee_id": employee_id,
-        "employee": employee,
+        "employee":  new_update_employee,
     }
 
 
@@ -269,12 +269,12 @@ async def update_employee(employee_id: int, employee: EmployeeCreate):
 async def update_hotel(hotel_id: int, hotel: HotelCreate):
     """Update a hotel by ID."""
 
-    update_hotel = await update_hotel(hotel_id, hotel)
+    new_update_hotel = await update_hotel(hotel_id, hotel)
 
     return {
         "message": "Hotel updated successfully",
         "hotel_id": hotel_id,
-        "hotel": hotel,
+        "hotel": new_update_hotel,
     }
 
 
@@ -282,12 +282,12 @@ async def update_hotel(hotel_id: int, hotel: HotelCreate):
 async def update_room(room_id: int, room: RoomCreate):
     """Update a room by ID."""
 
-    update_room = await update_room(room_id, room)
+    new_update_room = await update_room(room_id, room)
 
     return {
         "message": "Room updated successfully",
         "room_id": room_id,
-        "room": room,
+        "room": new_update_room,
     }
 
 
@@ -295,12 +295,12 @@ async def update_room(room_id: int, room: RoomCreate):
 async def update_booking(booking_id: int, booking: BookingCreate):
     """Update a booking by ID."""
 
-    update_booking = await update_booking(booking_id, booking)
+    new_update_booking = await update_booking(booking_id, booking)
 
     return {
         "message": "Booking updated to renting successfully",
         "booking_id": booking_id,
-        "booking": update_booking,
+        "booking": new_update_booking,
     }
 
 
