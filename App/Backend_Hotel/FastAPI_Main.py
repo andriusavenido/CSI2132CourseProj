@@ -4,7 +4,7 @@ from contextlib import asynccontextmanager
 from logging import getLogger
 from datetime import datetime, timezone
 from Models import CustomerCreate, EmployeeCreate, HotelCreate, RoomCreate
-from SQL_Service import insert_customer
+from SQL_Service import insert_customer, init_db_pool
 
 
 logger = getLogger(__name__)
@@ -17,11 +17,14 @@ startup_time: datetime | None = None
 # ------------------------------------------------------------------------------
 
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global startup_time
     startup_time = datetime.now(timezone.utc)
     logger.info("Application started at %s", startup_time.isoformat())
+    # Initialize the asyncpg pool
+    await init_db_pool()
     yield
     logger.info("Application shutting down")
 
@@ -240,3 +243,9 @@ async def update_room(room_id: int, room: RoomCreate):
         "room_id": room_id,
         "room": room,
     }
+
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=5000)
