@@ -195,42 +195,13 @@ async def get_customer_bookings(customer_id: int):
 
 
 # Delete endpoints for Hotel, Employee, Customer, Room
-@app.post("/delete_customer", tags=["Customer"])
-async def delete_customer(customer_id: int):
-    """Delete a customer by ID."""
+@app.delete("/delete_booking/{booking_id}", tags=["Booking"])
+async def delete_booking(booking_id: int):
+    """Delete a booking by ID."""
 
-    # TODO: Implement actual database function to delete the customer
+    # TODO: Implement actual database function to delete the booking
 
-    return {"message": "Customer deleted successfully", "customer_id": customer_id}
-
-
-@app.post("/delete_employee/{employee_id}", tags=["Employee"])
-async def delete_employee(employee_id: int):
-    """Delete an employee by ID."""
-
-    # TODO: Implement actual database function to delete the employee
-    # Note: need to check employee ID to confirm they are a manager before allowing deletion
-
-    return {"message": "Employee deleted successfully", "employee_id": employee_id}
-
-
-@app.post("/delete_hotel/{hotel_id}", tags=["Hotel"])
-async def delete_hotel(hotel_id: int):
-    """Delete a hotel by ID."""
-
-    # TODO: Implement actual database function to delete the hotel
-    # Note: need to check hotel ID to confirm it exists before allowing deletion
-
-    return {"message": "Hotel deleted successfully", "hotel_id": hotel_id}
-
-
-@app.post("/delete_room/{room_id}", tags=["Room"])
-async def delete_room(room_id: int):
-    """Delete a room by ID."""
-
-    # TODO: Implement actual database function to delete the room
-
-    return {"message": "Room deleted successfully", "room_id": room_id}
+    return {"message": "Booking deleted successfully", "booking_id": booking_id}
 
 
 # Update endpoints for Hotel, Employee, Customer, Room
