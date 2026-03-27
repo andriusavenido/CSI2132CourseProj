@@ -29,6 +29,16 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_bookings_for_customer,
 )
 
+from App.Backend_Hotel.SQL_Service_Delete import delete_booking
+
+from App.Backend_Hotel.SQL_Service_Update import (
+    update_customer,
+    update_employee,
+    update_hotel,
+    update_room,
+    update_booking,
+)
+
 from db_pool import init_db_pool
 
 logger = getLogger(__name__)
@@ -223,9 +233,9 @@ async def get_customer_bookings(customer_id: int):
 async def delete_booking(booking_id: int):
     """Delete a booking by ID."""
 
-    # TODO: Implement actual database function to delete the booking
+    delete_booking = await delete_booking(booking_id)
 
-    return {"message": "Booking deleted successfully", "booking_id": booking_id}
+    return {"message": "Booking deleted successfully", "booking_id": delete_booking}
 
 
 # Update endpoints for Hotel, Employee, Customer, Room
@@ -233,7 +243,7 @@ async def delete_booking(booking_id: int):
 async def update_customer(customer_id: int, customer: CustomerCreate):
     """Update a customer by ID."""
 
-    # TODO: Implement actual database function to update the customer
+    update_customer = await update_customer(customer_id, customer)
 
     return {
         "message": "Customer updated successfully",
@@ -246,7 +256,7 @@ async def update_customer(customer_id: int, customer: CustomerCreate):
 async def update_employee(employee_id: int, employee: EmployeeCreate):
     """Update an employee by ID."""
 
-    # TODO: Implement actual database function to update the employee
+    update_employee = await update_employee(employee_id, employee)
 
     return {
         "message": "Employee updated successfully",
@@ -259,7 +269,7 @@ async def update_employee(employee_id: int, employee: EmployeeCreate):
 async def update_hotel(hotel_id: int, hotel: HotelCreate):
     """Update a hotel by ID."""
 
-    # TODO: Implement actual database function to update the hotel
+    update_hotel = await update_hotel(hotel_id, hotel)
 
     return {
         "message": "Hotel updated successfully",
@@ -272,7 +282,7 @@ async def update_hotel(hotel_id: int, hotel: HotelCreate):
 async def update_room(room_id: int, room: RoomCreate):
     """Update a room by ID."""
 
-    # TODO: Implement actual database function to update the room
+    update_room = await update_room(room_id, room)
 
     return {
         "message": "Room updated successfully",
@@ -285,12 +295,12 @@ async def update_room(room_id: int, room: RoomCreate):
 async def update_booking(booking_id: int, booking: BookingCreate):
     """Update a booking by ID."""
 
-    # TODO: Implement actual database function to update the booking to renting from employee
+    update_booking = await update_booking(booking_id, booking)
 
     return {
         "message": "Booking updated to renting successfully",
         "booking_id": booking_id,
-        "booking": booking,
+        "booking": update_booking,
     }
 
 
