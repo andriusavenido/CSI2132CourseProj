@@ -1,13 +1,16 @@
-import asyncpg
-import os
 
+import logging
 from db_pool import pool
+
+logger = logging.getLogger(__name__)
+
 """
 Initialize the database connection pool using asyncpg. 
 """
 
 
 async def insert_customer(customer):
+    logger.info(f"Inserting customer: {customer}")
     query = """
             INSERT INTO customer (
                 phone_number,
@@ -36,10 +39,12 @@ async def insert_customer(customer):
             customer.id_type,
             customer.date_of_registration,
         )
+        logger.info(f"Customer insert result: {result}")
         return dict(result) if result else None
 
 
 async def insert_employee(employee):
+    logger.info(f"Inserting employee: {employee}")
     query = """
         INSERT INTO employee (
             ssn_sin,
@@ -64,10 +69,12 @@ async def insert_employee(employee):
             employee.country,
             employee.hotel_id,
         )
+        logger.info(f"Employee insert result: {result}")
         return dict(result) if result else None
 
 
 async def insert_hotel(hotel):
+    logger.info(f"Inserting hotel: {hotel}")
     query = """
         INSERT INTO hotel (
             chain_id,
@@ -94,10 +101,12 @@ async def insert_hotel(hotel):
             hotel.email_address,
             hotel.manager_id,
         )
+        logger.info(f"Hotel insert result: {result}")
         return dict(result) if result else None
 
 
 async def insert_room(room):
+    logger.info(f"Inserting room: {room}")
     query = """
         INSERT INTO room (
             hotel_id,
@@ -122,10 +131,12 @@ async def insert_room(room):
             room.room_view,
             room.bed_extension,
         )
+        logger.info(f"Room insert result: {result}")
         return dict(result) if result else None
 
 
 async def rent_room(rental):
+    logger.info(f"Renting room: {rental}")
     query = """
         INSERT INTO renting (
             customer_id,
@@ -154,10 +165,12 @@ async def rent_room(rental):
             rental.check_in_date,
             rental.check_out_date,
         )
+        logger.info(f"Rent room result: {result}")
         return dict(result) if result else None
 
 
 async def book_room(booking):
+    logger.info(f"Booking room: {booking}")
     query = """
         INSERT INTO booking (
             customer_id,
@@ -184,4 +197,5 @@ async def book_room(booking):
             booking.price,
             booking.status,
         )
+        logger.info(f"Book room result: {result}")
         return dict(result) if result else None

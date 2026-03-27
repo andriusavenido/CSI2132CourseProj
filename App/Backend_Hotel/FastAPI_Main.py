@@ -20,6 +20,15 @@ from App.Backend_Hotel.SQL_Service_Insert import (
     rent_room,
 )
 
+from App.Backend_Hotel.SQL_Service_View import (
+    get_all_chains,
+    get_all_hotels_in_chain,
+    get_rooms_in_hotel,
+    get_bookings_for_hotel,
+    get_rentings_for_hotel,
+    get_bookings_for_customer,
+)
+
 from db_pool import init_db_pool
 
 logger = getLogger(__name__)
@@ -144,54 +153,69 @@ async def book_room(booking: BookingCreate):
 async def list_chains():
     """List all hotel chains."""
 
-    # TODO: Implement actual database function to retrieve the hotel chains from the database
+    chains = await get_all_chains()
 
-    return {"chains": []}
+    return {"chains": chains}
 
 
 @app.get("/hotels", tags=["Hotel"])
-async def list_hotels():
+async def list_hotels(chain_id: int = None):
     """List all hotels."""
 
-    # TODO: Implement actual database function to retrieve the hotels from the database
+    if chain_id:
+        hotels = await get_all_hotels_in_chain(chain_id)
+    else:
+        hotels = []
 
-    return {"hotels": []}
+    return {"hotels": hotels}
 
 
 @app.get("/hotels/rooms/{hotel_id}", tags=["Hotel"])
-async def get_hotel(hotel_id: int):
+async def get_hotel(hotel_id: int = None):
     """Get details of a specific hotel by ID."""
 
-    # TODO: Implement actual database function to retrieve the hotel's rooms
+    if hotel_id:
+        rooms = await get_rooms_in_hotel(hotel_id)
+    else:
+        rooms = []
 
-    return {"hotel_id": hotel_id, "rooms": []}
+    return {"hotel_id": hotel_id, "rooms": rooms}
 
 
 @app.get("/employees/booking/{hotel_id}", tags=["Employee"])
-async def get_employee_bookings(hotel_id: int):
+async def get_employee_bookings(hotel_id: int = None):
     """Get bookings for a specific hotel by ID."""
 
-    # TODO: Implement actual database function to retrieve the employee bookings for the hotel
+    if hotel_id:
+        bookings = await get_bookings_for_hotel(hotel_id)
+    else:
+        bookings = []
 
-    return {"hotel_id": hotel_id, "bookings": []}
+    return {"hotel_id": hotel_id, "bookings": bookings}
 
 
 @app.get("/employees/renting/{hotel_id}", tags=["Employee"])
 async def get_employee_rentings(hotel_id: int):
     """Get rentings for a specific hotel by ID."""
 
-    # TODO: Implement actual database function to retrieve the employee rentings for the hotel
+    if hotel_id:
+        rentings = await get_rentings_for_hotel(hotel_id)
+    else:
+        rentings = []
 
-    return {"hotel_id": hotel_id, "rentings": []}
+    return {"hotel_id": hotel_id, "rentings": rentings}
 
 
 @app.get("/customers/booking/{customer_id}", tags=["Customer"])
 async def get_customer_bookings(customer_id: int):
     """Get bookings for a specific customer by ID."""
 
-    # TODO: Implement actual database function to retrieve the customer bookings
+    if customer_id:
+        bookings = await get_bookings_for_customer(customer_id)
+    else:
+        bookings = []
 
-    return {"customer_id": customer_id, "bookings": []}
+    return {"customer_id": customer_id, "bookings": bookings}
 
 
 # Delete endpoints for Hotel, Employee, Customer, Room
