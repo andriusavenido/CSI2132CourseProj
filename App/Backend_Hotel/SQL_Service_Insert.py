@@ -1,19 +1,10 @@
 import asyncpg
 import os
-from dotenv import load_dotenv
 
-pool: asyncpg.pool.Pool = None
-
+from db_pool import pool
 """
 Initialize the database connection pool using asyncpg. 
 """
-
-
-async def init_db_pool():
-    global pool
-    pool = await asyncpg.create_pool(
-        dsn=os.getenv("DATABASE_URL"), min_size=1, max_size=10
-    )
 
 
 async def insert_customer(customer):

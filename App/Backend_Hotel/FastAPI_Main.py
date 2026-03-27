@@ -13,7 +13,6 @@ from Models import (
 )
 from App.Backend_Hotel.SQL_Service_Insert import (
     insert_customer,
-    init_db_pool,
     insert_employee,
     insert_hotel,
     insert_room,
@@ -21,6 +20,7 @@ from App.Backend_Hotel.SQL_Service_Insert import (
     rent_room,
 )
 
+from db_pool import init_db_pool
 
 logger = getLogger(__name__)
 
