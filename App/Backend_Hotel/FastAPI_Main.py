@@ -27,6 +27,8 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_bookings_for_hotel,
     get_rentings_for_hotel,
     get_bookings_for_customer,
+    get_available_rooms_per_city,
+    get_hotel_total_capacity,
 )
 
 from App.Backend_Hotel.SQL_Service_Delete import delete_booking
@@ -228,6 +230,24 @@ async def get_customer_bookings(customer_id: int):
     return {"customer_id": customer_id, "bookings": bookings}
 
 
+@app.get("/Custom_View/available_rooms_per_city", tags=["Custom View"])
+async def get_available_rooms_per_city():
+    """Get hotels with available rooms."""
+
+    hotels_with_available_rooms = await get_available_rooms_per_city()
+
+    return {"hotels_with_available_rooms": hotels_with_available_rooms}
+
+
+@app.get("/Custom_View/hotel_total_capacity", tags=["Custom View"])
+async def get_hotel_total_capacity():
+    """Get total capacity of hotels."""
+
+    hotel_total_capacity = await get_hotel_total_capacity()
+
+    return {"hotel_total_capacity": hotel_total_capacity}
+
+
 # Delete endpoints for Hotel, Employee, Customer, Room
 @app.delete("/delete_booking/{booking_id}", tags=["Booking"])
 async def delete_booking(booking_id: int):
@@ -261,7 +281,7 @@ async def update_employee(employee_id: int, employee: EmployeeCreate):
     return {
         "message": "Employee updated successfully",
         "employee_id": employee_id,
-        "employee":  new_update_employee,
+        "employee": new_update_employee,
     }
 
 
