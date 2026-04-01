@@ -6,6 +6,7 @@ from typing import Optional
 # Hotel Chain
 # ------------------------------------------------------------------------------
 
+
 class HotelChainCreate(BaseModel):
     chain_name: str
     street: Optional[str] = None
@@ -18,6 +19,7 @@ class HotelChainCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Hotel
 # ------------------------------------------------------------------------------
+
 
 class HotelCreate(BaseModel):
     chain_id: int
@@ -34,6 +36,7 @@ class HotelCreate(BaseModel):
 # Employee
 # ------------------------------------------------------------------------------
 
+
 class EmployeeCreate(BaseModel):
     ssn_sin: str
     full_name: str
@@ -47,6 +50,7 @@ class EmployeeCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Customer
 # ------------------------------------------------------------------------------
+
 
 class CustomerCreate(BaseModel):
     phone_number: str
@@ -63,6 +67,7 @@ class CustomerCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Room
 # ------------------------------------------------------------------------------
+
 
 class RoomCreate(BaseModel):
     hotel_id: int
@@ -84,6 +89,7 @@ class RoomDamageCreate(BaseModel):
 # Booking
 # ------------------------------------------------------------------------------
 
+
 class BookingCreate(BaseModel):
     customer_id: int
     customer_name: str
@@ -98,6 +104,7 @@ class BookingCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Renting
 # ------------------------------------------------------------------------------
+
 
 class RentingCreate(BaseModel):
     customer_id: int
@@ -115,6 +122,7 @@ class RentingCreate(BaseModel):
 # Works On
 # ------------------------------------------------------------------------------
 
+
 class WorksOnCreate(BaseModel):
     employee_id: int
     renting_id: int
@@ -123,6 +131,7 @@ class WorksOnCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Contact Info
 # ------------------------------------------------------------------------------
+
 
 class ChainNumberCreate(BaseModel):
     chain_id: int
@@ -142,6 +151,7 @@ class HotelNumberCreate(BaseModel):
 # ------------------------------------------------------------------------------
 # Employee Positions
 # ------------------------------------------------------------------------------
+
 
 class EmployeePositionCreate(BaseModel):
     employee_id: int
