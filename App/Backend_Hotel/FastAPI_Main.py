@@ -81,6 +81,11 @@ app.add_middleware(
 )
 
 
+# ------------------------------------------------------------------------------
+# Status Section
+# ------------------------------------------------------------------------------
+
+
 @app.get("/health", tags=["Status"])
 def health_check():
     """Returns service health and uptime."""
@@ -102,27 +107,22 @@ def root():
 
 
 # ------------------------------------------------------------------------------
-# Endpoints for Hotel
+# Chain Section
 # ------------------------------------------------------------------------------
 
 
-# Insert endpoints for creating
-@app.post("/customer", tags=["Customer"], status_code=201)
-async def create_customer(customer: CustomerCreate):
-    """Create a new customer record."""
+@app.get("/chains", tags=["Chain"])
+async def list_chains():
+    """List all hotel chains."""
 
-    new_customer = await insert_customer(customer)
+    chains = await get_all_chains()
 
-    return {"message": "Customer created successfully", "customer": new_customer}
+    return {"chains": chains}
 
 
-@app.post("/employee", tags=["Employee"], status_code=201)
-async def create_employee(employee: EmployeeCreate):
-    """Create a new employee record."""
-
-    new_employee = await insert_employee(employee)
-
-    return {"message": "Employee created successfully", "employee": new_employee}
+# ------------------------------------------------------------------------------
+# Hotel Section
+# ------------------------------------------------------------------------------
 
 
 @app.post("/hotel", tags=["Hotel"], status_code=201)
@@ -132,43 +132,6 @@ async def create_hotel(hotel: HotelCreate):
     new_hotel = await insert_hotel(hotel)
 
     return {"message": "Hotel created successfully", "hotel": new_hotel}
-
-
-@app.post("/room", tags=["Room"], status_code=201)
-async def create_room(room: RoomCreate):
-    """Create a new room record."""
-
-    new_room = await insert_room(room)
-
-    return {"message": "Room created successfully", "room": new_room}
-
-
-@app.post("/rent_room", tags=["Renting"], status_code=201)
-async def rent_room(rental: RentingCreate):
-    """Rent a room."""
-
-    new_rental = await rent_room(rental)
-
-    return {"message": "Room rented successfully", "rental": new_rental}
-
-
-@app.post("/book_room", tags=["Booking"], status_code=201)
-async def book_room(booking: BookingCreate):
-    """Book a room."""
-
-    new_booking = await book_room(booking)
-
-    return {"message": "Room booked successfully", "booking": new_booking}
-
-
-# Get view endpoints for Hotel, Employee, Customer, Room, Booking, Renting, Chain
-@app.get("/chains", tags=["Chain"])
-async def list_chains():
-    """List all hotel chains."""
-
-    chains = await get_all_chains()
-
-    return {"chains": chains}
 
 
 @app.get("/hotels", tags=["Hotel"])
@@ -195,6 +158,60 @@ async def get_hotel(hotel_id: int = None):
     return {"hotel_id": hotel_id, "rooms": rooms}
 
 
+@app.post("/update_hotel/{hotel_id}", tags=["Hotel"])
+async def update_hotel(hotel_id: int, hotel: HotelCreate):
+    """Update a hotel by ID."""
+
+    new_update_hotel = await update_hotel(hotel_id, hotel)
+
+    return {
+        "message": "Hotel updated successfully",
+        "hotel_id": hotel_id,
+        "hotel": new_update_hotel,
+    }
+
+
+# ------------------------------------------------------------------------------
+# Room Section
+# ------------------------------------------------------------------------------
+
+
+@app.post("/room", tags=["Room"], status_code=201)
+async def create_room(room: RoomCreate):
+    """Create a new room record."""
+
+    new_room = await insert_room(room)
+
+    return {"message": "Room created successfully", "room": new_room}
+
+
+@app.post("/update_room/{room_id}", tags=["Room"])
+async def update_room(room_id: int, room: RoomCreate):
+    """Update a room by ID."""
+
+    new_update_room = await update_room(room_id, room)
+
+    return {
+        "message": "Room updated successfully",
+        "room_id": room_id,
+        "room": new_update_room,
+    }
+
+
+# ------------------------------------------------------------------------------
+# Employee Section
+# ------------------------------------------------------------------------------
+
+
+@app.post("/employee", tags=["Employee"], status_code=201)
+async def create_employee(employee: EmployeeCreate):
+    """Create a new employee record."""
+
+    new_employee = await insert_employee(employee)
+
+    return {"message": "Employee created successfully", "employee": new_employee}
+
+
 @app.get("/employees/booking/{hotel_id}", tags=["Employee"])
 async def get_employee_bookings(hotel_id: int = None):
     """Get bookings for a specific hotel by ID."""
@@ -217,6 +234,34 @@ async def get_employee_rentings(hotel_id: int):
         rentings = []
 
     return {"hotel_id": hotel_id, "rentings": rentings}
+
+
+@app.post("/update_employee/{employee_id}", tags=["Employee"])
+async def update_employee(employee_id: int, employee: EmployeeCreate):
+    """Update an employee by ID."""
+
+    new_update_employee = await update_employee(employee_id, employee)
+
+    return {
+        "message": "Employee updated successfully",
+        "employee_id": employee_id,
+        "employee": new_update_employee,
+    }
+
+
+# ------------------------------------------------------------------------------
+# Customer Section
+# ------------------------------------------------------------------------------
+
+
+@app.post("/customer", tags=["Customer"], status_code=201)
+async def create_customer(customer: CustomerCreate):
+    """Create a new customer record."""
+
+    new_customer = await insert_customer(customer)
+
+    return {"message": "Customer created successfully", "customer": new_customer}
+
 
 @app.get("/customer/{customer_id}", tags=["Customer"])
 async def get_customer(customer_id: int):
@@ -242,7 +287,74 @@ async def get_customer_bookings(customer_id: int):
     return {"customer_id": customer_id, "bookings": bookings}
 
 
-"""VIEWS"""
+@app.post("/update_customer/{customer_id}", tags=["Customer"])
+async def update_customer(customer_id: int, customer: CustomerCreate):
+    """Update a customer by ID."""
+
+    new_update_customer = await update_customer(customer_id, customer)
+
+    return {
+        "message": "Customer updated successfully",
+        "customer_id": customer_id,
+        "customer": new_update_customer,
+    }
+
+
+# ------------------------------------------------------------------------------
+# Booking Section
+# ------------------------------------------------------------------------------
+
+
+@app.post("/book_room", tags=["Booking"], status_code=201)
+async def book_room(booking: BookingCreate):
+    """Book a room."""
+
+    new_booking = await book_room(booking)
+
+    return {"message": "Room booked successfully", "booking": new_booking}
+
+
+@app.delete("/delete_booking/{booking_id}", tags=["Booking"])
+async def delete_booking(booking_id: int):
+    """Delete a booking by ID."""
+
+    new_delete_booking = await delete_booking(booking_id)
+
+    return {"message": "Booking deleted successfully", "booking_id": new_delete_booking}
+
+
+@app.post("/update_booking/{booking_id}", tags=["Booking"])
+async def update_booking(booking_id: int, booking: BookingCreate):
+    """Update a booking by ID."""
+
+    new_update_booking = await update_booking(booking_id, booking)
+
+    return {
+        "message": "Booking updated to renting successfully",
+        "booking_id": booking_id,
+        "booking": new_update_booking,
+    }
+
+
+# ------------------------------------------------------------------------------
+# Renting Section
+# ------------------------------------------------------------------------------
+
+
+@app.post("/rent_room", tags=["Renting"], status_code=201)
+async def rent_room(rental: RentingCreate):
+    """Rent a room."""
+
+    new_rental = await rent_room(rental)
+
+    return {"message": "Room rented successfully", "rental": new_rental}
+
+
+# ------------------------------------------------------------------------------
+# Custom View Section
+# ------------------------------------------------------------------------------
+
+
 @app.get("/Custom_View/available_rooms_per_city", tags=["Custom View"])
 async def get_available_rooms_per_city():
     """Get hotels with available rooms."""
@@ -259,82 +371,6 @@ async def get_hotel_total_capacity():
     hotel_total_capacity = await get_hotel_total_capacity()
 
     return {"hotel_total_capacity": hotel_total_capacity}
-
-
-# Delete endpoints for Hotel, Employee, Customer, Room
-@app.delete("/delete_booking/{booking_id}", tags=["Booking"])
-async def delete_booking(booking_id: int):
-    """Delete a booking by ID."""
-
-    new_delete_booking = await delete_booking(booking_id)
-
-    return {"message": "Booking deleted successfully", "booking_id": new_delete_booking}
-
-
-# Update endpoints for Hotel, Employee, Customer, Room
-@app.post("/update_customer/{customer_id}", tags=["Customer"])
-async def update_customer(customer_id: int, customer: CustomerCreate):
-    """Update a customer by ID."""
-
-    new_update_customer = await update_customer(customer_id, customer)
-
-    return {
-        "message": "Customer updated successfully",
-        "customer_id": customer_id,
-        "customer": new_update_customer,
-    }
-
-
-@app.post("/update_employee/{employee_id}", tags=["Employee"])
-async def update_employee(employee_id: int, employee: EmployeeCreate):
-    """Update an employee by ID."""
-
-    new_update_employee = await update_employee(employee_id, employee)
-
-    return {
-        "message": "Employee updated successfully",
-        "employee_id": employee_id,
-        "employee": new_update_employee,
-    }
-
-
-@app.post("/update_hotel/{hotel_id}", tags=["Hotel"])
-async def update_hotel(hotel_id: int, hotel: HotelCreate):
-    """Update a hotel by ID."""
-
-    new_update_hotel = await update_hotel(hotel_id, hotel)
-
-    return {
-        "message": "Hotel updated successfully",
-        "hotel_id": hotel_id,
-        "hotel": new_update_hotel,
-    }
-
-
-@app.post("/update_room/{room_id}", tags=["Room"])
-async def update_room(room_id: int, room: RoomCreate):
-    """Update a room by ID."""
-
-    new_update_room = await update_room(room_id, room)
-
-    return {
-        "message": "Room updated successfully",
-        "room_id": room_id,
-        "room": new_update_room,
-    }
-
-
-@app.post("/update_booking/{booking_id}", tags=["Booking"])
-async def update_booking(booking_id: int, booking: BookingCreate):
-    """Update a booking by ID."""
-
-    new_update_booking = await update_booking(booking_id, booking)
-
-    return {
-        "message": "Booking updated to renting successfully",
-        "booking_id": booking_id,
-        "booking": new_update_booking,
-    }
 
 
 if __name__ == "__main__":
