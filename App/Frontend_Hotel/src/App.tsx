@@ -1,10 +1,13 @@
 import { useState } from 'react'
-
+import MainPage from './pages/MainPage'
+import { Routes, Route } from 'react-router'
 function App() {
 
   return (
     <>
-    <div>test</div>
+    <Routes>
+      <Route path="/" element={<MainPage />} />
+    </Routes>
     </>
   )
 }
