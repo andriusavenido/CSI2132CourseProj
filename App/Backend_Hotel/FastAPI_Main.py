@@ -27,6 +27,7 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_bookings_for_hotel,
     get_rentings_for_hotel,
     get_bookings_for_customer,
+    get_customer_by_id,
     get_available_rooms_per_city,
     get_hotel_total_capacity,
 )
@@ -217,6 +218,17 @@ async def get_employee_rentings(hotel_id: int):
 
     return {"hotel_id": hotel_id, "rentings": rentings}
 
+@app.get("/customer/{customer_id}", tags=["Customer"])
+async def get_customer(customer_id: int):
+    """Get a customer by ID."""
+
+    customer = await get_customer_by_id(customer_id)
+
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
+
+    return {"customer": customer}
+
 
 @app.get("/customers/booking/{customer_id}", tags=["Customer"])
 async def get_customer_bookings(customer_id: int):
@@ -230,6 +242,7 @@ async def get_customer_bookings(customer_id: int):
     return {"customer_id": customer_id, "bookings": bookings}
 
 
+"""VIEWS"""
 @app.get("/Custom_View/available_rooms_per_city", tags=["Custom View"])
 async def get_available_rooms_per_city():
     """Get hotels with available rooms."""

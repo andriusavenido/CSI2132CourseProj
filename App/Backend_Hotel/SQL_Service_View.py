@@ -67,6 +67,17 @@ async def get_bookings_for_customer(customer_id):
         logger.info(f"Returned {len(results)} results")
         return [dict(result) for result in results]
 
+"""get customer by id"""
+async def get_customer_by_id(customer_id):
+    logger.info(
+        f"Executing query: SELECT * FROM customer WHERE customer_id = $1; | Params: customer_id={customer_id}"
+    )
+    query = "SELECT * FROM customer WHERE customer_id = $1;"
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(query, customer_id)
+        logger.info(f"Returned customer: {result}")
+        return dict(result) if result else None
+
 
 async def get_available_rooms_per_city():
     logger.info("Grab the custom view made from the database")
