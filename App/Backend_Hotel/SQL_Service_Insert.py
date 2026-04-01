@@ -4,9 +4,116 @@ from db_pool import pool
 
 logger = logging.getLogger(__name__)
 
-"""
-Initialize the database connection pool using asyncpg. 
-"""
+# ------------------------------------------------------------------------------
+# Hotel Section
+# ------------------------------------------------------------------------------
+
+
+async def insert_hotel(hotel):
+    logger.info(f"Inserting hotel: {hotel}")
+    query = """
+        INSERT INTO hotel (
+            chain_id,
+            rating,
+            street,
+            city,
+            zip_code,
+            country,
+            email_address,
+            manager_id
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        RETURNING *;
+    """
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(
+            query,
+            hotel.chain_id,
+            hotel.rating,
+            hotel.street,
+            hotel.city,
+            hotel.zip_code,
+            hotel.country,
+            hotel.email_address,
+            hotel.manager_id,
+        )
+        logger.info(f"Hotel insert result: {result}")
+        return dict(result) if result else None
+
+
+# ------------------------------------------------------------------------------
+# Room Section
+# ------------------------------------------------------------------------------
+
+
+async def insert_room(room):
+    logger.info(f"Inserting room: {room}")
+    query = """
+        INSERT INTO room (
+            hotel_id,
+            room_number,
+            price,
+            amenities,
+            capacity,
+            room_view,
+            bed_extension
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;
+    """
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(
+            query,
+            room.hotel_id,
+            room.room_number,
+            room.price,
+            room.amenities,
+            room.capacity,
+            room.room_view,
+            room.bed_extension,
+        )
+        logger.info(f"Room insert result: {result}")
+        return dict(result) if result else None
+
+
+# ------------------------------------------------------------------------------
+# Employee Section
+# ------------------------------------------------------------------------------
+
+
+async def insert_employee(employee):
+    logger.info(f"Inserting employee: {employee}")
+    query = """
+        INSERT INTO employee (
+            ssn_sin,
+            full_name,
+            street,
+            city,
+            zip_code,
+            country,
+            hotel_id
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING *;
+    """
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(
+            query,
+            employee.ssn_sin,
+            employee.full_name,
+            employee.street,
+            employee.city,
+            employee.zip_code,
+            employee.country,
+            employee.hotel_id,
+        )
+        logger.info(f"Employee insert result: {result}")
+        return dict(result) if result else None
+
+
+# ------------------------------------------------------------------------------
+# Customer Section
+# ------------------------------------------------------------------------------
 
 
 async def insert_customer(customer):
@@ -43,48 +150,23 @@ async def insert_customer(customer):
         return dict(result) if result else None
 
 
-async def insert_employee(employee):
-    logger.info(f"Inserting employee: {employee}")
-    query = """
-        INSERT INTO employee (
-            ssn_sin,
-            full_name,
-            street,
-            city,
-            zip_code,
-            country,
-            hotel_id
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING *;
-    """
-    async with pool.acquire() as connection:
-        result = await connection.fetchrow(
-            query,
-            employee.ssn_sin,
-            employee.full_name,
-            employee.street,
-            employee.city,
-            employee.zip_code,
-            employee.country,
-            employee.hotel_id,
-        )
-        logger.info(f"Employee insert result: {result}")
-        return dict(result) if result else None
+# ------------------------------------------------------------------------------
+# Booking Section
+# ------------------------------------------------------------------------------
 
 
-async def insert_hotel(hotel):
-    logger.info(f"Inserting hotel: {hotel}")
+async def book_room(booking):
+    logger.info(f"Booking room: {booking}")
     query = """
-        INSERT INTO hotel (
-            chain_id,
-            rating,
-            street,
-            city,
-            zip_code,
-            country,
-            email_address,
-            manager_id
+        INSERT INTO booking (
+            customer_id,
+            customer_name,
+            room_number,
+            hotel_chain,
+            hotel,
+            hotel_id,
+            price,
+            status
         )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;
@@ -92,47 +174,22 @@ async def insert_hotel(hotel):
     async with pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
-            hotel.chain_id,
-            hotel.rating,
-            hotel.street,
-            hotel.city,
-            hotel.zip_code,
-            hotel.country,
-            hotel.email_address,
-            hotel.manager_id,
+            booking.customer_id,
+            booking.customer_name,
+            booking.room_number,
+            booking.hotel_chain,
+            booking.hotel,
+            booking.hotel_id,
+            booking.price,
+            booking.status,
         )
-        logger.info(f"Hotel insert result: {result}")
+        logger.info(f"Book room result: {result}")
         return dict(result) if result else None
 
 
-async def insert_room(room):
-    logger.info(f"Inserting room: {room}")
-    query = """
-        INSERT INTO room (
-            hotel_id,
-            room_number,
-            price,
-            amenities,
-            capacity,
-            room_view,
-            bed_extension
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING *;
-    """
-    async with pool.acquire() as connection:
-        result = await connection.fetchrow(
-            query,
-            room.hotel_id,
-            room.room_number,
-            room.price,
-            room.amenities,
-            room.capacity,
-            room.room_view,
-            room.bed_extension,
-        )
-        logger.info(f"Room insert result: {result}")
-        return dict(result) if result else None
+# ------------------------------------------------------------------------------
+# Renting Section
+# ------------------------------------------------------------------------------
 
 
 async def rent_room(rental):
@@ -166,36 +223,4 @@ async def rent_room(rental):
             rental.check_out_date,
         )
         logger.info(f"Rent room result: {result}")
-        return dict(result) if result else None
-
-
-async def book_room(booking):
-    logger.info(f"Booking room: {booking}")
-    query = """
-        INSERT INTO booking (
-            customer_id,
-            customer_name,
-            room_number,
-            hotel_chain,
-            hotel,
-            hotel_id,
-            price,
-            status
-        )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-        RETURNING *;
-    """
-    async with pool.acquire() as connection:
-        result = await connection.fetchrow(
-            query,
-            booking.customer_id,
-            booking.customer_name,
-            booking.room_number,
-            booking.hotel_chain,
-            booking.hotel,
-            booking.hotel_id,
-            booking.price,
-            booking.status,
-        )
-        logger.info(f"Book room result: {result}")
         return dict(result) if result else None

@@ -3,6 +3,10 @@ from db_pool import pool
 
 logger = logging.getLogger(__name__)
 
+# ------------------------------------------------------------------------------
+# Chain Section
+# ------------------------------------------------------------------------------
+
 
 async def get_all_chains():
     logger.info("Executing query: SELECT * FROM hotel_chain;")
@@ -11,6 +15,11 @@ async def get_all_chains():
         results = await connection.fetch(query)
         logger.info(f"Returned {len(results)} results")
         return [dict(result) for result in results]
+
+
+# ------------------------------------------------------------------------------
+# Hotel Section
+# ------------------------------------------------------------------------------
 
 
 async def get_all_hotels_in_chain(chain_id):
@@ -35,6 +44,38 @@ async def get_rooms_in_hotel(hotel_id):
         return [dict(result) for result in results]
 
 
+# ------------------------------------------------------------------------------
+# Customer Section
+# ------------------------------------------------------------------------------
+
+
+async def get_customer_by_id(customer_id):
+    logger.info(
+        f"Executing query: SELECT * FROM customer WHERE customer_id = $1; | Params: customer_id={customer_id}"
+    )
+    query = "SELECT * FROM customer WHERE customer_id = $1;"
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(query, customer_id)
+        logger.info(f"Returned customer: {result}")
+        return dict(result) if result else None
+
+
+async def get_bookings_for_customer(customer_id):
+    logger.info(
+        f"Executing query: SELECT * FROM booking WHERE customer_id = $1; | Params: customer_id={customer_id}"
+    )
+    query = "SELECT * FROM booking WHERE customer_id = $1;"
+    async with pool.acquire() as connection:
+        results = await connection.fetch(query, customer_id)
+        logger.info(f"Returned {len(results)} results")
+        return [dict(result) for result in results]
+
+
+# ------------------------------------------------------------------------------
+# Employee Section
+# ------------------------------------------------------------------------------
+
+
 async def get_bookings_for_hotel(hotel_id):
     logger.info(
         f"Executing query: SELECT * FROM booking WHERE hotel_id = $1; | Params: hotel_id={hotel_id}"
@@ -57,26 +98,9 @@ async def get_rentings_for_hotel(hotel_id):
         return [dict(result) for result in results]
 
 
-async def get_bookings_for_customer(customer_id):
-    logger.info(
-        f"Executing query: SELECT * FROM booking WHERE customer_id = $1; | Params: customer_id={customer_id}"
-    )
-    query = "SELECT * FROM booking WHERE customer_id = $1;"
-    async with pool.acquire() as connection:
-        results = await connection.fetch(query, customer_id)
-        logger.info(f"Returned {len(results)} results")
-        return [dict(result) for result in results]
-
-"""get customer by id"""
-async def get_customer_by_id(customer_id):
-    logger.info(
-        f"Executing query: SELECT * FROM customer WHERE customer_id = $1; | Params: customer_id={customer_id}"
-    )
-    query = "SELECT * FROM customer WHERE customer_id = $1;"
-    async with pool.acquire() as connection:
-        result = await connection.fetchrow(query, customer_id)
-        logger.info(f"Returned customer: {result}")
-        return dict(result) if result else None
+# ------------------------------------------------------------------------------
+# Custom View Section
+# ------------------------------------------------------------------------------
 
 
 async def get_available_rooms_per_city():
