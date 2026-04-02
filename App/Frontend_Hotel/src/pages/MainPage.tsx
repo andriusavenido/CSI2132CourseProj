@@ -1,32 +1,91 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { useNavigate } from 'react-router';
+import bgImage from '../assets/webp_background.jpg';
+import logo from '../assets/logo.svg';
 
 const MainPage: React.FC = () => {
-  const handleModeSelect = (mode: 'customer' | 'employee') => {
-    console.log(`Selected mode: ${mode}`);
-    // TODO: Add navigation logic here, e.g., using React Router's useNavigate
-    // Example: navigate('/customer') or navigate('/employee')
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-3xl font-bold mb-8 text-gray-800">
-          Hotel Finder
+    <div
+      className="w-full h-screen flex"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      {/* Left — branding */}
+      <div className="flex-1 flex flex-col justify-center px-16">
+        <h1
+          className="text-7xl font-bold tracking-wide mb-4 text-center"
+          style={{color: '#ffffff'}}
+        >
+          Serene
         </h1>
-        <p className="text-lg mb-6 text-gray-600">
-          Please select your mode to continue:
+        <p
+          className="text-xl tracking-widest uppercase text-center"
+          style={{color: '#ffffff'}}
+        >
+          Find your place of relaxation
         </p>
-        <div className="space-y-4">
+      </div>
+
+      {/* Right — side panel */}
+      <div
+        className="flex flex-col justify-center px-12 py-16 min-h-screen gap-3"
+        style={{
+          position: 'relative',
+          width: '42%',
+          backgroundColor: 'rgba(13, 26, 28, 0.88)',
+          backdropFilter: 'blur(6px)',
+          borderLeft: '1px solid var(--boba-deep-teal)',
+        }}
+      >
+        <img
+          src={logo}
+          alt="Serene logo"
+          style={{ alignSelf: 'center', width: '120px', height: '120px', marginBottom: '0.5rem' }}
+        />
+        <h2
+          className="text-2xl font-semibold mb-2 text-center"
+          style={{color: '#ffffff'}}
+        >
+          Welcome back
+        </h2>
+        <p
+          className="text-sm mb-16 text-center"
+          style={{color: '#ffffff'}}
+        >
+          Select how you'd like to continue
+        </p>
+
+        <div className="flex flex-col gap-4 ">
           <button
-            onClick={() => handleModeSelect('customer')}
-            className="w-full max-w-xs px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
+            onClick={() => navigate('/customer')}
+            className="w-full py-4 text-base font-semibold rounded-lg transition-all"
+            style={{
+              backgroundColor: 'var(--boba-teal)',
+              color: '#ffffff',
+              border: '1px solid var(--boba-mid-teal)',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--boba-mid-teal-hover)')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--boba-teal)')}
           >
             Customer Mode
           </button>
+
           <button
-            onClick={() => handleModeSelect('employee')}
-            className="w-full max-w-xs px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
+            onClick={() => navigate('/employee')}
+            className="w-full py-4 text-base font-semibold rounded-lg transition-all"
+            style={{
+              backgroundColor: 'var(--boba-blue-green)',
+              color: '#ffffff',
+              border: '1px solid var(--boba-blue-green-hover)',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'var(--boba-blue-green-hover)')}
+            onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'var(--boba-blue-green)')}
           >
             Employee Mode
           </button>

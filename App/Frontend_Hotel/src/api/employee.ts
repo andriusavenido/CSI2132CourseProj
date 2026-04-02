@@ -7,14 +7,14 @@ export interface Employee {
     full_name: string
     street: string
     city: string
-    zip_code: string | null
+    zip_code: string
     country: string
     hotel_id: number
 }
 
 export interface EmployeesResponse {
     message: string
-    employee: any
+    employee: Employee
 }
 
 export interface EmployeeRentingResponse {

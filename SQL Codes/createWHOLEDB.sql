@@ -10,7 +10,6 @@ CREATE TABLE Hotel_Chain (
     zip_code VARCHAR(20),
     country VARCHAR(100),
     chain_name VARCHAR(100),
-    number_of_hotels INTEGER NOT NULL CHECK (number_of_hotels >= 0)
 );
 
 CREATE TABLE Employee (
