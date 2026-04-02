@@ -98,6 +98,17 @@ async def get_rentings_for_hotel(hotel_id):
         return [dict(result) for result in results]
 
 
+async def get_employee_by_id(employee_id):
+    logger.info(
+        f"Executing query: SELECT * FROM employee WHERE employee_id = $1; | Params: employee_id={employee_id}"
+    )
+    query = "SELECT * FROM employee WHERE employee_id = $1;"
+    async with pool.acquire() as connection:
+        result = await connection.fetchrow(query, employee_id)
+        logger.info(f"Returned employee: {result}")
+        return dict(result) if result else None
+
+
 # ------------------------------------------------------------------------------
 # Custom View Section
 # ------------------------------------------------------------------------------

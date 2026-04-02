@@ -118,6 +118,11 @@ class RentingCreate(BaseModel):
     check_out_date: Optional[str] = None
 
 
+class BookingToRentingRequest(BaseModel):
+    check_in_date: str
+    check_out_date: Optional[str] = None
+
+
 # ------------------------------------------------------------------------------
 # Works On
 # ------------------------------------------------------------------------------

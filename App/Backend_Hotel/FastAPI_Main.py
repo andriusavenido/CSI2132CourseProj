@@ -10,6 +10,7 @@ from Models import (
     RoomCreate,
     RentingCreate,
     BookingCreate,
+    BookingToRentingRequest,
 )
 from App.Backend_Hotel.SQL_Service_Insert import (
     insert_customer,
@@ -18,6 +19,7 @@ from App.Backend_Hotel.SQL_Service_Insert import (
     insert_room,
     book_room,
     rent_room,
+    booking_to_renting,
 )
 
 from App.Backend_Hotel.SQL_Service_View import (
@@ -30,6 +32,7 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_customer_by_id,
     get_available_rooms_per_city,
     get_hotel_total_capacity,
+    get_employee_by_id,
 )
 
 from App.Backend_Hotel.SQL_Service_Delete import delete_booking
@@ -249,6 +252,18 @@ async def update_employee(employee_id: int, employee: EmployeeCreate):
     }
 
 
+@app.get("/employee/{employee_id}", tags=["Employee"])
+async def get_employee(employee_id: int):
+    """Get details of a specific employee by ID."""
+
+    employee = await get_employee_by_id(employee_id)
+
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
+    return {"employee": employee}
+
+
 # ------------------------------------------------------------------------------
 # Customer Section
 # ------------------------------------------------------------------------------
@@ -348,6 +363,20 @@ async def rent_room(rental: RentingCreate):
     new_rental = await rent_room(rental)
 
     return {"message": "Room rented successfully", "rental": new_rental}
+
+
+@app.post("/booking_to_renting/{booking_id}", tags=["Renting"], status_code=201)
+async def convert_booking_to_renting(booking_id: int, request: BookingToRentingRequest):
+    """Convert an existing booking into a renting record."""
+
+    renting = await booking_to_renting(
+        booking_id, request.check_in_date, request.check_out_date
+    )
+
+    if not renting:
+        raise HTTPException(status_code=404, detail="Booking not found")
+
+    return {"message": "Booking converted to renting successfully", "renting": renting}
 
 
 # ------------------------------------------------------------------------------

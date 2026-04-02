@@ -224,3 +224,50 @@ async def rent_room(rental):
         )
         logger.info(f"Rent room result: {result}")
         return dict(result) if result else None
+
+
+# ------------------------------------------------------------------------------
+# Convert Booking to Renting
+# ------------------------------------------------------------------------------
+
+
+async def booking_to_renting(booking_id: int, check_in_date: str, check_out_date: str = None):
+    fetch_query = "SELECT * FROM booking WHERE booking_id = $1;"
+    insert_renting_query = """
+        INSERT INTO renting (
+            customer_id,
+            customer_name,
+            hotel,
+            hotel_chain,
+            room_number,
+            hotel_id,
+            price,
+            check_in_date,
+            check_out_date
+        )
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        RETURNING *;
+    """
+    delete_booking_query = "DELETE FROM booking WHERE booking_id = $1;"
+
+    async with pool.acquire() as connection:
+        async with connection.transaction():
+            booking = await connection.fetchrow(fetch_query, booking_id)
+            if not booking:
+                return None
+
+            renting = await connection.fetchrow(
+                insert_renting_query,
+                booking["customer_id"],
+                booking["customer_name"],
+                booking["hotel"],
+                booking["hotel_chain"],
+                booking["room_number"],
+                booking["hotel_id"],
+                booking["price"],
+                check_in_date,
+                check_out_date,
+            )
+            await connection.execute(delete_booking_query, booking_id)
+            logger.info(f"Converted booking {booking_id} to renting {dict(renting)}")
+            return dict(renting) if renting else None

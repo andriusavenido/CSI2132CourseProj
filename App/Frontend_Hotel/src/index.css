@@ -13,6 +13,16 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
+  /* Boba Fett palette */
+  --boba-bg: #0d1a1c;
+  --boba-deep-teal: #0f3330;
+  --boba-teal: #2e6b5a;
+  --boba-mid-teal: #3d8c72;
+  --boba-blue-green: #2a5f6e;
+  --boba-slate: #3a5f5a;
+  --boba-silver: #8fa8a0;
+  --boba-charcoal: #1e2828;
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
