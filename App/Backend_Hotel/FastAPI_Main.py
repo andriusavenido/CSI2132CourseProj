@@ -27,12 +27,12 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_all_hotels_in_chain,
     get_rooms_in_hotel,
     get_bookings_for_hotel,
-    get_rentings_for_hotel,
     get_bookings_for_customer,
     get_customer_by_id,
     get_available_rooms_per_city,
     get_hotel_total_capacity,
     get_employee_by_id,
+    get_rentings_for_employee,
 )
 
 from App.Backend_Hotel.SQL_Service_Delete import delete_booking
@@ -227,16 +227,13 @@ async def get_employee_bookings(hotel_id: int = None):
     return {"hotel_id": hotel_id, "bookings": bookings}
 
 
-@app.get("/employees/renting/{hotel_id}", tags=["Employee"])
-async def get_employee_rentings(hotel_id: int):
-    """Get rentings for a specific hotel by ID."""
+@app.get("/employees/renting/{employee_id}", tags=["Employee"])
+async def get_employee_rentings(employee_id: int):
+    """Get all rentings handled by a specific employee."""
 
-    if hotel_id:
-        rentings = await get_rentings_for_hotel(hotel_id)
-    else:
-        rentings = []
+    rentings = await get_rentings_for_employee(employee_id)
 
-    return {"hotel_id": hotel_id, "rentings": rentings}
+    return {"employee_id": employee_id, "rentings": rentings}
 
 
 @app.post("/update_employee/{employee_id}", tags=["Employee"])

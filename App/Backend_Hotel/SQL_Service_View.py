@@ -87,13 +87,16 @@ async def get_bookings_for_hotel(hotel_id):
         return [dict(result) for result in results]
 
 
-async def get_rentings_for_hotel(hotel_id):
-    logger.info(
-        f"Executing query: SELECT * FROM renting WHERE hotel_id = $1; | Params: hotel_id={hotel_id}"
-    )
-    query = "SELECT * FROM renting WHERE hotel_id = $1;"
+async def get_rentings_for_employee(employee_id):
+    logger.info(f"Fetching rentings for employee_id={employee_id}")
+    query = """
+        SELECT r.*
+        FROM renting r
+        JOIN works_on w ON r.renting_id = w.renting_id
+        WHERE w.employee_id = $1;
+    """
     async with pool.acquire() as connection:
-        results = await connection.fetch(query, hotel_id)
+        results = await connection.fetch(query, employee_id)
         logger.info(f"Returned {len(results)} results")
         return [dict(result) for result in results]
 
