@@ -209,21 +209,25 @@ async def rent_room(rental):
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *;
     """
+    works_on_query = "INSERT INTO works_on (employee_id, renting_id) VALUES ($1, $2);"
     async with pool.acquire() as connection:
-        result = await connection.fetchrow(
-            query,
-            rental.customer_id,
-            rental.customer_name,
-            rental.hotel,
-            rental.hotel_chain,
-            rental.room_number,
-            rental.hotel_id,
-            rental.price,
-            rental.check_in_date,
-            rental.check_out_date,
-        )
-        logger.info(f"Rent room result: {result}")
-        return dict(result) if result else None
+        async with connection.transaction():
+            result = await connection.fetchrow(
+                query,
+                rental.customer_id,
+                rental.customer_name,
+                rental.hotel,
+                rental.hotel_chain,
+                rental.room_number,
+                rental.hotel_id,
+                rental.price,
+                rental.check_in_date,
+                rental.check_out_date,
+            )
+            if result:
+                await connection.execute(works_on_query, rental.employee_id, result["renting_id"])
+            logger.info(f"Rent room result: {result}")
+            return dict(result) if result else None
 
 
 # ------------------------------------------------------------------------------
@@ -231,7 +235,7 @@ async def rent_room(rental):
 # ------------------------------------------------------------------------------
 
 
-async def booking_to_renting(booking_id: int, check_in_date: str, check_out_date: str = None):
+async def booking_to_renting(booking_id: int, employee_id: int, check_in_date: str, check_out_date: str = None):
     fetch_query = "SELECT * FROM booking WHERE booking_id = $1;"
     insert_renting_query = """
         INSERT INTO renting (
@@ -269,5 +273,10 @@ async def booking_to_renting(booking_id: int, check_in_date: str, check_out_date
                 check_out_date,
             )
             await connection.execute(delete_booking_query, booking_id)
+            await connection.execute(
+                "INSERT INTO works_on (employee_id, renting_id) VALUES ($1, $2);",
+                employee_id,
+                renting["renting_id"],
+            )
             logger.info(f"Converted booking {booking_id} to renting {dict(renting)}")
             return dict(renting) if renting else None

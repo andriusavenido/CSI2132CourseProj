@@ -116,11 +116,13 @@ class RentingCreate(BaseModel):
     price: float
     check_in_date: str
     check_out_date: Optional[str] = None
+    employee_id: int
 
 
 class BookingToRentingRequest(BaseModel):
     check_in_date: str
     check_out_date: Optional[str] = None
+    employee_id: int
 
 
 # ------------------------------------------------------------------------------

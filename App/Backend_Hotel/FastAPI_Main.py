@@ -370,7 +370,7 @@ async def convert_booking_to_renting(booking_id: int, request: BookingToRentingR
     """Convert an existing booking into a renting record."""
 
     renting = await booking_to_renting(
-        booking_id, request.check_in_date, request.check_out_date
+        booking_id, request.employee_id, request.check_in_date, request.check_out_date
     )
 
     if not renting:
