@@ -19,7 +19,7 @@ const HotelChainSelection: React.FC = () => {
     },[])
 
     const handleSelect = (chain: HotelChain) =>{
-        navigate(`/customer/chains/${chain.chain_id}`);
+        navigate(`/customer/chains/${chain.chain_id}`, { state: { chainName: chain.chain_name } });
     }
 
     return ( 

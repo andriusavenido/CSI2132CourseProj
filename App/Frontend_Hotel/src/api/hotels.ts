@@ -41,6 +41,11 @@ export interface HotelResponse {
     hotels: Hotel[];
 }
 
+export interface HotelChainHotelsResponse {
+    chain_id: number;
+    hotels: Hotel[];
+}
+
 export interface HotelRoomsResponse {
     hotel_id: number;
     rooms: any[];
@@ -60,14 +65,15 @@ export async function getHotelChains(): Promise<HotelChain[]> {
 
 //get hotels
 export async function getHotels(chainId?: number): Promise<Hotel[]> {
-    const url = chainId ? `${BASE_URL}/hotels?chain_id=${chainId}` : `${BASE_URL}/hotels`;
+    const url = chainId ? `${BASE_URL}/chains/${chainId}/hotels` : `${BASE_URL}/hotels`;
     const response = await fetch(url);
 
     if (!response.ok) {
         throw new Error("Failed to fetch hotels");
     }
 
-    const data: HotelResponse = await response.json();
+    const data = await response.json();
+    // Handle both response formats: with chain_id and without
     return data.hotels;
 }
 

@@ -123,6 +123,15 @@ async def list_chains():
     return {"chains": chains}
 
 
+@app.get("/chains/{chain_id}/hotels", tags=["Chain"])
+async def get_hotels_in_chain(chain_id: int):
+    """Get all hotels in a specific chain."""
+
+    hotels = await get_all_hotels_in_chain(chain_id)
+
+    return {"chain_id": chain_id, "hotels": hotels}
+
+
 # ------------------------------------------------------------------------------
 # Hotel Section
 # ------------------------------------------------------------------------------
