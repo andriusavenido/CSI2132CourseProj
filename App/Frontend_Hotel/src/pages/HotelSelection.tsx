@@ -49,8 +49,10 @@ const HotelSelection: React.FC = () => {
     }, [hotels, searchTerm, selectedRating, selectedCountry, selectedCity]);
 
     const handleSelectHotel = (hotel: Hotel) => {
-        // Navigate to room selection or booking page
-        navigate(`/customer/hotels/${hotel.hotel_id}`);
+        // Navigate to room selection with hotel info
+        navigate(`/customer/hotels/${hotel.hotel_id}`, { 
+            state: { hotelName: `Hotel ${hotel.hotel_id}`, hotel: hotel } 
+        });
     };
 
     const uniqueCountries = hotels ? [...new Set(hotels.map(h => h.country).filter(Boolean))] : [];
@@ -58,7 +60,7 @@ const HotelSelection: React.FC = () => {
     const uniqueCities = hotels ? [...new Set(hotels.map(h => h.city).filter(Boolean))] : [];
 
     return (
-        <div className="min-h-screen bg-white flex flex-col items-center p-6">
+        <div className=" bg-white flex flex-col items-center p-6">
             <h1 className="mb-2 text-3xl font-bold text-boba-silver">
                 {chainName}
             </h1>
