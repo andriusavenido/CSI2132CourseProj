@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { useCustomer } from "../../context/CustomerContext"; 
+import { useNavigate } from "react-router";
 
 interface Props {
   onCreateAccount: () => void;
-  onLoginSuccess?: () => void; // optional redirect/navigation
 }
 
 const CustomerLoginForm: React.FC<Props> = ({
-  onCreateAccount,
-  onLoginSuccess,
+  onCreateAccount
 }) => {
   const [customerId, setCustomerId] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loadingLocal, setLoadingLocal] = useState(false);
+  const navigate = useNavigate();
 
   const { login, loading } = useCustomer();
 
@@ -29,8 +29,7 @@ const CustomerLoginForm: React.FC<Props> = ({
       }
 
       await login(id); // context handles API + sessionStorage
-
-      onLoginSuccess?.(); 
+      navigate('/customer/chains');
     } catch {
       setError("Customer not found. Please check your ID.");
     } finally {
