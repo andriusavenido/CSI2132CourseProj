@@ -11,6 +11,8 @@ function App() {
       <Route path="/" element={<MainPage />} />
       <Route path="/employee" element={<EmployeeLogin />} />
       <Route path="/customer" element={<CustomerLogin/>} />
+      <Route path="/chains/" element={<CustomerLogin/>} />
+      <Route path="/chains/:chainsId" element={<CustomerLogin/>} />
     </Routes>
     </>
   )

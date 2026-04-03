@@ -1,4 +1,4 @@
-from db_pool import pool
+import db_pool
 
 # ------------------------------------------------------------------------------
 # Booking Section
@@ -14,7 +14,7 @@ async def delete_booking(booking_id):
         WHERE id = $1
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(query, booking_id)
         return dict(result) if result else None
     

@@ -30,7 +30,7 @@ const CustomerLoginForm: React.FC<Props> = ({
 
       await login(id); // context handles API + sessionStorage
 
-      onLoginSuccess?.(); // navigate if needed
+      onLoginSuccess?.(); 
     } catch {
       setError("Customer not found. Please check your ID.");
     } finally {

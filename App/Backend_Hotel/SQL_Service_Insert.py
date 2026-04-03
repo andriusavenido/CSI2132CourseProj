@@ -1,6 +1,6 @@
 
 import logging
-from db_pool import pool
+import db_pool
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ async def insert_hotel(hotel):
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             hotel.chain_id,
@@ -61,7 +61,7 @@ async def insert_room(room):
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             room.hotel_id,
@@ -96,7 +96,7 @@ async def insert_employee(employee):
         VALUES ($1, $2, $3, $4, $5, $6, $7)
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             employee.ssn_sin,
@@ -133,7 +133,7 @@ async def insert_customer(customer):
             VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
             RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             customer.phone_number,
@@ -171,7 +171,7 @@ async def book_room(booking):
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             booking.customer_id,
@@ -210,7 +210,7 @@ async def rent_room(rental):
         RETURNING *;
     """
     works_on_query = "INSERT INTO works_on (employee_id, renting_id) VALUES ($1, $2);"
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         async with connection.transaction():
             result = await connection.fetchrow(
                 query,
@@ -254,7 +254,7 @@ async def booking_to_renting(booking_id: int, employee_id: int, check_in_date: s
     """
     delete_booking_query = "DELETE FROM booking WHERE booking_id = $1;"
 
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         async with connection.transaction():
             booking = await connection.fetchrow(fetch_query, booking_id)
             if not booking:

@@ -28,7 +28,7 @@ export interface BookingResponse {
 export async function createCustomer(
     customer: Customer
 ): Promise<CustomerResponse> {
-    const response = await fetch(`${BASE_URL}/customer`, {
+    const response = await fetch(`$BASE_URL/customer`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -50,7 +50,9 @@ export async function getCustomerById(
         `${BASE_URL}/customer/${customerId}`
     );
     if (!response.ok) {
-        throw new Error("Failed to fetch customer");
+        const text = await response.text();
+        console.error("customer fetch error body:", text);
+        throw new Error(`Failed to fetch customer (${response.status})`);
     }
     return response.json();
 }

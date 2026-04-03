@@ -1,4 +1,4 @@
-from db_pool import pool
+import db_pool
 
 # ------------------------------------------------------------------------------
 # Hotel Section
@@ -16,7 +16,7 @@ async def update_hotel(hotel_id, hotel):
         WHERE hotel_id = $6
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             hotel.name,
@@ -47,7 +47,7 @@ async def update_room(room_id, room):
         WHERE room_id = $8
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             room.hotel_id,
@@ -80,7 +80,7 @@ async def update_employee(employee_id, employee):
         WHERE employee_id = $8
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             employee.ssn_sin,
@@ -115,7 +115,7 @@ async def update_customer(customer_id, customer):
         WHERE customer_id = $10
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             customer.phone_number,
@@ -149,7 +149,7 @@ async def update_booking(booking_id, booking):
         WHERE booking_id = $7
         RETURNING *;
     """
-    async with pool.acquire() as connection:
+    async with db_pool.pool.acquire() as connection:
         result = await connection.fetchrow(
             query,
             booking.customer_id,

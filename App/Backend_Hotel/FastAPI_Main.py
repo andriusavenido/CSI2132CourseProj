@@ -12,7 +12,7 @@ from Models import (
     BookingCreate,
     BookingToRentingRequest,
 )
-from App.Backend_Hotel.SQL_Service_Insert import (
+from SQL_Service_Insert import (
     insert_customer,
     insert_employee,
     insert_hotel,
@@ -22,7 +22,7 @@ from App.Backend_Hotel.SQL_Service_Insert import (
     booking_to_renting,
 )
 
-from App.Backend_Hotel.SQL_Service_View import (
+from SQL_Service_View import (
     get_all_chains,
     get_all_hotels_in_chain,
     get_rooms_in_hotel,
@@ -35,9 +35,9 @@ from App.Backend_Hotel.SQL_Service_View import (
     get_rentings_for_employee,
 )
 
-from App.Backend_Hotel.SQL_Service_Delete import delete_booking
+from SQL_Service_Delete import delete_booking
 
-from App.Backend_Hotel.SQL_Service_Update import (
+from SQL_Service_Update import (
     update_customer,
     update_employee,
     update_hotel,
@@ -78,7 +78,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )

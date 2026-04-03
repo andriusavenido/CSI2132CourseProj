@@ -16,6 +16,7 @@ async def init_db_pool():
     try:
         db_url = os.getenv("DATABASE_URL")
         if not db_url:
+            logger.error("DATABASE_URL is not set")
             raise ValueError("DATABASE_URL is not set")
 
         pool = await asyncpg.create_pool(
@@ -23,7 +24,7 @@ async def init_db_pool():
             min_size=1,
             max_size=10
         )
-
+        
         logger.info("Database pool initialized successfully")
 
     except Exception as e:

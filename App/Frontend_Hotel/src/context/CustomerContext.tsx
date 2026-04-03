@@ -38,6 +38,7 @@ export const CustomerProvider: React.FC<{children:React.ReactNode}> = ({children
             setCustomerId(id);
 
             //may be some value to also storing customer object in session
+            
             sessionStorage.setItem("customerId", id.toString())
         }catch (err){
             console.error("login failed for customer", err);
