@@ -78,9 +78,9 @@ async def get_bookings_for_customer(customer_id):
 
 async def get_bookings_for_hotel(hotel_id):
     logger.info(
-        f"Executing query: SELECT * FROM booking WHERE hotel_id = $1; | Params: hotel_id={hotel_id}"
+        f"Executing query: SELECT * FROM booking WHERE hotel_id = $1 AND status != 'completed'; | Params: hotel_id={hotel_id}"
     )
-    query = "SELECT * FROM booking WHERE hotel_id = $1;"
+    query = "SELECT * FROM booking WHERE hotel_id = $1 AND status != 'completed';"
     async with db_pool.pool.acquire() as connection:
         results = await connection.fetch(query, hotel_id)
         logger.info(f"Returned {len(results)} results")

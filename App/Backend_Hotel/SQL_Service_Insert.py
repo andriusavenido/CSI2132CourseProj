@@ -1,4 +1,3 @@
-
 import logging
 import db_pool
 
@@ -225,7 +224,9 @@ async def rent_room(rental):
                 rental.check_out_date,
             )
             if result:
-                await connection.execute(works_on_query, rental.employee_id, result["renting_id"])
+                await connection.execute(
+                    works_on_query, rental.employee_id, result["renting_id"]
+                )
             logger.info(f"Rent room result: {result}")
             return dict(result) if result else None
 
@@ -235,7 +236,9 @@ async def rent_room(rental):
 # ------------------------------------------------------------------------------
 
 
-async def booking_to_renting(booking_id: int, employee_id: int, check_in_date: str, check_out_date: str = None):
+async def booking_to_renting(
+    booking_id: int, employee_id: int, check_in_date: str, check_out_date: str = None
+):
     fetch_query = "SELECT * FROM booking WHERE booking_id = $1;"
     insert_renting_query = """
         INSERT INTO renting (
@@ -252,7 +255,9 @@ async def booking_to_renting(booking_id: int, employee_id: int, check_in_date: s
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         RETURNING *;
     """
-    delete_booking_query = "DELETE FROM booking WHERE booking_id = $1;"
+    update_booking_query = (
+        "UPDATE booking SET status = 'completed' WHERE booking_id = $1;"
+    )
 
     async with db_pool.pool.acquire() as connection:
         async with connection.transaction():
@@ -272,7 +277,7 @@ async def booking_to_renting(booking_id: int, employee_id: int, check_in_date: s
                 check_in_date,
                 check_out_date,
             )
-            await connection.execute(delete_booking_query, booking_id)
+            await connection.execute(update_booking_query, booking_id)
             await connection.execute(
                 "INSERT INTO works_on (employee_id, renting_id) VALUES ($1, $2);",
                 employee_id,

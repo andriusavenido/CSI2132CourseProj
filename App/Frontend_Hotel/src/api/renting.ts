@@ -11,9 +11,11 @@ export interface Renting {
     price: number;
     check_in_date: string;
     check_out_date?: string;
+    employee_id: number;
 }
 
 export interface BookingToRentingRequest {
+    employee_id: number;
     check_in_date: string;
     check_out_date?: string;
 }
@@ -69,15 +71,3 @@ export async function convertBookingToRenting(
     return response.json();
 }
 
-// get all current rentings for a hotel
-export async function getCurrentRentingsForHotel(
-    hotelId: number
-): Promise<Renting[]> {
-    const response = await fetch(`${BASE_URL}/employees/renting/${hotelId}`);
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch current rentings for hotel");
-    }
-
-    return response.json();
-}

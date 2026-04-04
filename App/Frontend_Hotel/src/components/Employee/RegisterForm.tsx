@@ -32,7 +32,7 @@ const RegisterForm: React.FC<Props> = ({ onBackToLogin }) => {
         try {
             await createEmployee(form);
             setSuccess(true);
-            navigate('/employee/rentings');
+            navigate('/employee/dashboard');
         } catch {
             setError('Failed to create account. Please try again.');
         }

@@ -17,8 +17,8 @@ from SQL_Service_Insert import (
     insert_employee,
     insert_hotel,
     insert_room,
-    book_room,
-    rent_room,
+    book_room as svc_book_room,
+    rent_room as svc_rent_room,
     booking_to_renting,
 )
 
@@ -35,14 +35,14 @@ from SQL_Service_View import (
     get_rentings_for_employee,
 )
 
-from SQL_Service_Delete import delete_booking
+from SQL_Service_Delete import delete_booking as svc_delete_booking
 
 from SQL_Service_Update import (
-    update_customer,
-    update_employee,
-    update_hotel,
-    update_room,
-    update_booking,
+    update_customer as svc_update_customer,
+    update_employee as svc_update_employee,
+    update_hotel as svc_update_hotel,
+    update_room as svc_update_room,
+    update_booking as svc_update_booking,
 )
 
 from db_pool import init_db_pool
@@ -174,7 +174,7 @@ async def get_hotel(hotel_id: int = None):
 async def update_hotel(hotel_id: int, hotel: HotelCreate):
     """Update a hotel by ID."""
 
-    new_update_hotel = await update_hotel(hotel_id, hotel)
+    new_update_hotel = await svc_update_hotel(hotel_id, hotel)
 
     return {
         "message": "Hotel updated successfully",
@@ -201,7 +201,7 @@ async def create_room(room: RoomCreate):
 async def update_room(room_id: int, room: RoomCreate):
     """Update a room by ID."""
 
-    new_update_room = await update_room(room_id, room)
+    new_update_room = await svc_update_room(room_id, room)
 
     return {
         "message": "Room updated successfully",
@@ -249,7 +249,7 @@ async def get_employee_rentings(employee_id: int):
 async def update_employee(employee_id: int, employee: EmployeeCreate):
     """Update an employee by ID."""
 
-    new_update_employee = await update_employee(employee_id, employee)
+    new_update_employee = await svc_update_employee(employee_id, employee)
 
     return {
         "message": "Employee updated successfully",
@@ -312,7 +312,7 @@ async def get_customer_bookings(customer_id: int):
 async def update_customer(customer_id: int, customer: CustomerCreate):
     """Update a customer by ID."""
 
-    new_update_customer = await update_customer(customer_id, customer)
+    new_update_customer = await svc_update_customer(customer_id, customer)
 
     return {
         "message": "Customer updated successfully",
@@ -330,7 +330,7 @@ async def update_customer(customer_id: int, customer: CustomerCreate):
 async def book_room(booking: BookingCreate):
     """Book a room."""
 
-    new_booking = await book_room(booking)
+    new_booking = await svc_book_room(booking)
 
     return {"message": "Room booked successfully", "booking": new_booking}
 
@@ -339,7 +339,7 @@ async def book_room(booking: BookingCreate):
 async def delete_booking(booking_id: int):
     """Delete a booking by ID."""
 
-    new_delete_booking = await delete_booking(booking_id)
+    new_delete_booking = await svc_delete_booking(booking_id)
 
     return {"message": "Booking deleted successfully", "booking_id": new_delete_booking}
 
@@ -348,7 +348,7 @@ async def delete_booking(booking_id: int):
 async def update_booking(booking_id: int, booking: BookingCreate):
     """Update a booking by ID."""
 
-    new_update_booking = await update_booking(booking_id, booking)
+    new_update_booking = await svc_update_booking(booking_id, booking)
 
     return {
         "message": "Booking updated to renting successfully",
@@ -366,7 +366,7 @@ async def update_booking(booking_id: int, booking: BookingCreate):
 async def rent_room(rental: RentingCreate):
     """Rent a room."""
 
-    new_rental = await rent_room(rental)
+    new_rental = await svc_rent_room(rental)
 
     return {"message": "Room rented successfully", "rental": new_rental}
 

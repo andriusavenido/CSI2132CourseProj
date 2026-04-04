@@ -76,15 +76,3 @@ export async function updateBooking(
     return response.json();
 }
 
-// get all bookings in the current hotel
-export async function getBookingsForHotel(
-    hotelId: number
-): Promise<Booking[]> {
-    const response = await fetch(`${BASE_URL}/employees/booking/${hotelId}`);
-
-    if (!response.ok) {
-        throw new Error("Failed to fetch bookings for hotel");
-    }
-
-    return response.json();
-}

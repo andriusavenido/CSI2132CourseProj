@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { getEmployeeByID } from '../../api/employee';
+import { useNavigate } from 'react-router';
 
 interface Props {
     onCreateAccount: () => void;
@@ -10,6 +11,7 @@ const LoginForm: React.FC<Props> = ({ onCreateAccount, onLogin }) => {
     const [employeeId, setEmployeeId] = useState('');
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = async (e: React.SyntheticEvent) => {
         e.preventDefault();
@@ -25,6 +27,7 @@ const LoginForm: React.FC<Props> = ({ onCreateAccount, onLogin }) => {
             sessionStorage.setItem('employeeId', String(id));
             sessionStorage.setItem('employee', JSON.stringify(result.employee));
             onLogin(id);
+            navigate('/employee/dashboard');
         } catch {
             setError('Login failed. Please try again.');
         } finally {

@@ -37,8 +37,8 @@ export async function createEmployee(employee: Employee): Promise<EmployeesRespo
 }
 
 export async function updateEmployee(employee: Employee, employeeID: number): Promise<EmployeesResponse> {
-    const response = await fetch(`${BASE_URL}/employee/${employeeID}`, {
-        method: "PUT",
+    const response = await fetch(`${BASE_URL}/update_employee/${employeeID}`, {
+        method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
@@ -57,6 +57,24 @@ export async function getEmployeeByID(employeeID: number): Promise<EmployeesResp
         },
     });
 
+    const data = await response.json();
+    return data;
+}
+
+export async function getEmployeeBookings(hotelId: number): Promise<{ hotel_id: number; bookings: any[] }> {
+    const response = await fetch(`${BASE_URL}/employees/booking/${hotelId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
+    const data = await response.json();
+    return data;
+}
+
+export async function getEmployeeRentings(employeeId: number): Promise<{ employee_id: number; rentings: any[] }> {
+    const response = await fetch(`${BASE_URL}/employees/renting/${employeeId}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+    });
     const data = await response.json();
     return data;
 }
