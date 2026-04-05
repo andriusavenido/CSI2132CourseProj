@@ -2,6 +2,7 @@ const BASE_URL: string = import.meta.env.VITE_API_BASE_URL;
 
 // ---- Types ----
 export interface Booking {
+    booking_id?: number; // Optional for creation
     customer_id: number;
     customer_name: string;
     room_number: string;

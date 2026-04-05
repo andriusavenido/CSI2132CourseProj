@@ -150,6 +150,7 @@ const RoomSelection: React.FC = () => {
         setSelectedRoom(null);
 
         alert("Booking successful");
+        navigate('/customer/profile')
     } catch (err) {
         console.error(err);
         alert("Booking failed");

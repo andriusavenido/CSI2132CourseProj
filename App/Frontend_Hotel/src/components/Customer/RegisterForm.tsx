@@ -50,7 +50,7 @@ const CustomerRegisterForm: React.FC<Props> = ({ onBackToLogin }) => {
       // auto login after registration
       await login(newCustomerId);
 
-      navigate("/customer/chains");
+      navigate("/customer/profile");
     } catch {
       setError("Failed to create account. Please try again.");
     } finally {

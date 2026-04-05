@@ -7,6 +7,7 @@ import CustomerLogin from './pages/CustomerLogin'
 import HotelChainSelection from './pages/HotelChainSelection'
 import HotelSelection from './pages/HotelSelection'
 import RoomSelection from './pages/RoomSelection'
+import CustomerProfile from './pages/CustomerProfile'
 function App() {
 
   return (
@@ -17,6 +18,7 @@ function App() {
       <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
       <Route path="/employee/profile" element={<EmployeeProfile />} />
       <Route path="/customer" element={<CustomerLogin/>} />
+      <Route path="/customer/profile" element={<CustomerProfile/>} />
       <Route path="/customer/chains" element={<HotelChainSelection/>} />
       <Route path="/customer/chains/:chainsId" element={<HotelSelection/>} />
       <Route path="/customer/hotels/:hotelId" element={<RoomSelection/>} />
