@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router";
 import { getHotels, type Hotel } from "../api/hotels";
 import RoomsPerCity from "../components/Customer/RoomsPerCity";
 import HotelCapacity from "../components/Customer/HotelCapacity";
+import logo from "../assets/logo.svg";
 
 const HotelSelection: React.FC = () => {
     const { chainsId } = useParams<{ chainsId: string }>();
@@ -62,109 +63,170 @@ const HotelSelection: React.FC = () => {
     const uniqueCities = hotels ? [...new Set(hotels.map(h => h.city).filter(Boolean))] : [];
 
     return (
-        <div className=" bg-white flex flex-col items-center p-6">
-            <h1 className="mb-2 text-3xl font-bold text-boba-silver">
-                {chainName}
-            </h1>
-            <p className="mb-6 text-lg text-boba-mid-teal">
-                Hotel Selection
-            </p>
+        <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "var(--sans)" }}>
+            <header style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                backgroundColor: "#ffffff",
+                borderBottom: "1px solid #e5e7eb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 2rem",
+                height: "64px",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+            }}>
+                <button
+                    onClick={() => navigate("/")}
+                    style={{ display: "flex", alignItems: "center", gap: "0.625rem", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                >
+                    <img src={logo} alt="Serene" style={{ width: "36px", height: "36px" }} />
+                    <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--boba-teal)", letterSpacing: "0.04em" }}>
+                        Serene
+                    </span>
+                </button>
 
-            {/* Filters and Search */}
-            <div className="w-full max-w-6xl mb-6">
-                <div className="bg-boba-deep-teal p-4 rounded-lg shadow-lg">
-                    <div className="flex flex-wrap gap-4 items-center">
-                        {/* Search Bar */}
-                        <div className="flex-1 min-w-64">
-                            <input
-                                type="text"
-                                placeholder="Search by city, country, or street..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className="w-full px-4 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            />
-                        </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                    <button
+                        onClick={() => navigate("/customer/profile")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                            backgroundColor: "rgba(46,107,90,0.1)",
+                            color: "var(--boba-teal)",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Profile
+                    </button>
+                    <button
+                        onClick={() => navigate("/customer/chains")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 400,
+                            fontSize: "0.9rem",
+                            backgroundColor: "transparent",
+                            color: "#6b7280",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Book a Hotel
+                    </button>
+                </div>
+            </header>
 
-                        {/* Rating Filter */}
-                        <div className="min-w-32">
-                            <select
-                                value={selectedRating}
-                                onChange={(e) => setSelectedRating(e.target.value === "" ? "" : parseInt(e.target.value))}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            >
-                                <option value="">All Ratings</option>
-                                {uniqueRatings.map((rating) => (
-                                    <option key={rating} value={rating}>
-                                        {rating} Stars
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+            <main className="flex flex-col items-center p-6">
+                <h1 className="mb-2 text-3xl font-bold text-boba-silver">
+                    {chainName}
+                </h1>
+                <p className="mb-6 text-lg text-boba-mid-teal">
+                    Hotel Selection
+                </p>
 
-                        {/* Country Filter */}
-                        <div className="min-w-32">
-                            <select
-                                value={selectedCountry}
-                                onChange={(e) => setSelectedCountry(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            >
-                                <option value="">All Countries</option>
-                                {uniqueCountries.map((country) => (
-                                    <option key={country} value={country}>
-                                        {country}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                {/* Filters and Search */}
+                <div className="w-full max-w-6xl mb-6">
+                    <div className="bg-boba-deep-teal p-4 rounded-lg shadow-lg">
+                        <div className="flex flex-wrap gap-4 items-center">
+                            {/* Search Bar */}
+                            <div className="flex-1 min-w-64">
+                                <input
+                                    type="text"
+                                    placeholder="Search by city, country, or street..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="w-full px-4 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                                />
+                            </div>
 
-                        {/* City Filter */}
-                        <div className="min-w-32">
-                            <select
-                                value={selectedCity}
-                                onChange={(e) => setSelectedCity(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            >
-                                <option value="">All Cities</option>
-                                {uniqueCities.map((city) => (
-                                    <option key={city} value={city}>
-                                        {city}
-                                    </option>
-                                ))}
-                            </select>
+                            {/* Rating Filter */}
+                            <div className="min-w-32">
+                                <select
+                                    value={selectedRating}
+                                    onChange={(e) => setSelectedRating(e.target.value === "" ? "" : parseInt(e.target.value))}
+                                    className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                                >
+                                    <option value="">All Ratings</option>
+                                    {uniqueRatings.map((rating) => (
+                                        <option key={rating} value={rating}>
+                                            {rating} Stars
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Country Filter */}
+                            <div className="min-w-32">
+                                <select
+                                    value={selectedCountry}
+                                    onChange={(e) => setSelectedCountry(e.target.value)}
+                                    className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                                >
+                                    <option value="">All Countries</option>
+                                    {uniqueCountries.map((country) => (
+                                        <option key={country} value={country}>
+                                            {country}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* City Filter */}
+                            <div className="min-w-32">
+                                <select
+                                    value={selectedCity}
+                                    onChange={(e) => setSelectedCity(e.target.value)}
+                                    className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                                >
+                                    <option value="">All Cities</option>
+                                    {uniqueCities.map((city) => (
+                                        <option key={city} value={city}>
+                                            {city}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="flex">
-                {/** View Table */}
-                <RoomsPerCity></RoomsPerCity>
-                <HotelCapacity chainName={chainName}></HotelCapacity>
-            </div>
-            
+                <div className="flex">
+                    {/** View Table */}
+                    <RoomsPerCity></RoomsPerCity>
+                    <HotelCapacity chainName={chainName}></HotelCapacity>
+                </div>
+                
 
-            {/* Hotels Grid */}
-            <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">
-                {filteredHotels.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredHotels.map((hotel) => (
-                            <HotelBlock
-                                key={hotel.hotel_id}
-                                hotel={hotel}
-                                onSelect={handleSelectHotel}
-                            />
-                        ))}
-                    </div>
-                ) : hotels ? (
-                    <p className="text-center text-boba-silver text-lg">
-                        No hotels match your filters.
-                    </p>
-                ) : (
-                    <p className="text-center text-boba-silver text-lg">
-                        Loading hotels...
-                    </p>
-                )}
-            </div>
+                {/* Hotels Grid */}
+                <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">
+                    {filteredHotels.length > 0 ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {filteredHotels.map((hotel) => (
+                                <HotelBlock
+                                    key={hotel.hotel_id}
+                                    hotel={hotel}
+                                    onSelect={handleSelectHotel}
+                                />
+                            ))}
+                        </div>
+                    ) : hotels ? (
+                        <p className="text-center text-boba-silver text-lg">
+                            No hotels match your filters.
+                        </p>
+                    ) : (
+                        <p className="text-center text-boba-silver text-lg">
+                            Loading hotels...
+                        </p>
+                    )}
+                </div>
+            </main>
         </div>
     );
 };

@@ -3,6 +3,7 @@ import { getCustomerBookings, updateCustomer, type Customer } from "../api/custo
 import { useCustomer } from "../context/CustomerContext";
 import { deleteBooking, type Booking } from "../api/bookings";
 import { useNavigate } from "react-router";
+import logo from "../assets/logo.svg";
 
 const emptyCustomer: Customer = {
     phone_number: "",
@@ -91,11 +92,71 @@ const CustomerProfile: React.FC = () => {
     }
 
     return (
-        <div className="bg-white flex flex-col items-center p-6">
-            <h1 className="mb-2 text-3xl font-bold text-boba-silver">Customer Dashboard</h1>
-            <p className="mb-6 text-lg text-boba-mid-teal">Manage your profile and bookings</p>
+        <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "var(--sans)" }}>
+            <header style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                backgroundColor: "#ffffff",
+                borderBottom: "1px solid #e5e7eb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 2rem",
+                height: "64px",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+            }}>
+                <button
+                    onClick={() => navi("/")}
+                    style={{ display: "flex", alignItems: "center", gap: "0.625rem", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                >
+                    <img src={logo} alt="Serene" style={{ width: "36px", height: "36px" }} />
+                    <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--boba-teal)", letterSpacing: "0.04em" }}>
+                        Serene
+                    </span>
+                </button>
 
-            <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                    <button
+                        onClick={() => navi("/customer/profile")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                            backgroundColor: "rgba(46,107,90,0.1)",
+                            color: "var(--boba-teal)",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Profile
+                    </button>
+                    <button
+                        onClick={() => navi("/customer/chains")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 400,
+                            fontSize: "0.9rem",
+                            backgroundColor: "transparent",
+                            color: "#6b7280",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Book a Hotel
+                    </button>
+                </div>
+            </header>
+
+            <main className="flex flex-col items-center p-6">
+                <h1 className="mb-2 text-3xl font-bold text-boba-silver">Customer Dashboard</h1>
+                <p className="mb-6 text-lg text-boba-mid-teal">Manage your profile and bookings</p>
+
+                <div className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 bg-boba-bg p-6 rounded-lg">
                         <h2 className="text-xl font-semibold text-boba-silver mb-4">Your Details</h2>
                         <form className="space-y-4" onSubmit={handleSave}>
@@ -258,6 +319,7 @@ const CustomerProfile: React.FC = () => {
                         </button>
                 </div>
             </div>
+            </main>
         </div>
     );
 };

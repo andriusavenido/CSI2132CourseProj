@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { useNavigate } from "react-router";
 import { getHotelChains, type HotelChain } from "../api/hotels";
+import logo from "../assets/logo.svg";
 
 
 const HotelChainSelection: React.FC = () => {
@@ -23,27 +24,88 @@ const HotelChainSelection: React.FC = () => {
     }
 
     return (
-        <div className="bg-white flex flex-col items-center p-6">
-            <h1 className="mb-2 text-3xl font-bold text-boba-silver">
-                Hotel Chain Selection
-            </h1>
-            <p className="mb-6 text-lg text-boba-mid-teal">Choose a chain to browse hotels</p>
+        <div style={{ minHeight: "100vh", backgroundColor: "#f8fafc", fontFamily: "var(--sans)" }}>
+            <header style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 100,
+                backgroundColor: "#ffffff",
+                borderBottom: "1px solid #e5e7eb",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "0 2rem",
+                height: "64px",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+            }}>
+                <button
+                    onClick={() => navigate("/")}
+                    style={{ display: "flex", alignItems: "center", gap: "0.625rem", background: "none", border: "none", cursor: "pointer", padding: 0 }}
+                >
+                    <img src={logo} alt="Serene" style={{ width: "36px", height: "36px" }} />
+                    <span style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--boba-teal)", letterSpacing: "0.04em" }}>
+                        Serene
+                    </span>
+                </button>
 
-            <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">
-                {chains ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {chains.map((chain) => (
-                            <ChainBlock
-                                key={chain.chain_id}
-                                chain={chain}
-                                onSelect={handleSelect}
-                            />
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-center text-boba-silver text-lg">Loading hotel chains...</p>
-                )}
-            </div>
+                <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                    <button
+                        onClick={() => navigate("/customer/profile")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 600,
+                            fontSize: "0.9rem",
+                            backgroundColor: "rgba(46,107,90,0.1)",
+                            color: "var(--boba-teal)",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Profile
+                    </button>
+                    <button
+                        onClick={() => navigate("/customer/chains")}
+                        style={{
+                            padding: "0.5rem 1.1rem",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: 400,
+                            fontSize: "0.9rem",
+                            backgroundColor: "transparent",
+                            color: "#6b7280",
+                            transition: "background 0.15s, color 0.15s",
+                        }}
+                    >
+                        Book a Hotel
+                    </button>
+                </div>
+            </header>
+
+            <main className="flex flex-col items-center p-6">
+                <h1 className="mb-2 text-3xl font-bold text-boba-silver">
+                    Hotel Chain Selection
+                </h1>
+                <p className="mb-6 text-lg text-boba-mid-teal">Choose a chain to browse hotels</p>
+
+                <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">
+                    {chains ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            {chains.map((chain) => (
+                                <ChainBlock
+                                    key={chain.chain_id}
+                                    chain={chain}
+                                    onSelect={handleSelect}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-center text-boba-silver text-lg">Loading hotel chains...</p>
+                    )}
+                </div>
+            </main>
         </div>
     );
 }
