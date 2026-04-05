@@ -42,6 +42,35 @@ async def get_rooms_in_hotel(hotel_id):
         results = await connection.fetch(query, hotel_id)
         logger.info(f"Returned {len(results)} results")
         return [dict(result) for result in results]
+    
+async def get_rooms_in_hotel_available(hotel_id):
+    logger.info(
+        "Executing query: available rooms in hotel_id=$1 (exclude active bookings/rentings)"
+    )
+    query = """
+        SELECT r.*
+        FROM room r
+        WHERE r.hotel_id = $1
+          AND NOT EXISTS (
+                SELECT 1
+                FROM booking b
+                WHERE b.hotel_id = r.hotel_id
+                  AND b.room_number = r.room_number
+                  AND b.status = 'Booked'
+          )
+          AND NOT EXISTS (
+                SELECT 1
+                FROM renting rent
+                WHERE rent.hotel_id = r.hotel_id
+                  AND rent.room_number = r.room_number
+                  AND (rent.check_out_date IS NULL
+                       OR rent.check_out_date::DATE >= CURRENT_DATE)
+          );
+    """
+    async with db_pool.pool.acquire() as connection:
+        results = await connection.fetch(query, hotel_id)
+        logger.info(f"Returned {len(results)} results")
+        return [dict(result) for result in results]
 
 
 # ------------------------------------------------------------------------------

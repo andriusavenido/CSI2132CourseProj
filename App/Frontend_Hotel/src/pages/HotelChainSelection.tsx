@@ -22,16 +22,16 @@ const HotelChainSelection: React.FC = () => {
         navigate(`/customer/chains/${chain.chain_id}`, { state: { chainName: chain.chain_name } });
     }
 
-    return ( 
-    <div className=" inset-0 bg-opacity-50 min-h-screen bg-white flex-col justify-center items-center z-50">
-        <h1 className=" mb-5 text-2xl font-bold text-boba-blue-green">
-                    Hotel Chain Selection
-        </h1>
-            {/* Inner container for the list */}
-            <div className="bg-boba-deep-teal p-4 rounded-lg shadow-lg w-full max-w-xl max-h-[80vh] overflow-y-auto">
-                
+    return (
+        <div className="bg-white flex flex-col items-center p-6">
+            <h1 className="mb-2 text-3xl font-bold text-boba-silver">
+                Hotel Chain Selection
+            </h1>
+            <p className="mb-6 text-lg text-boba-mid-teal">Choose a chain to browse hotels</p>
+
+            <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">
                 {chains ? (
-                    <div className="flex flex-col gap-4 items-center">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {chains.map((chain) => (
                             <ChainBlock
                                 key={chain.chain_id}
@@ -41,7 +41,7 @@ const HotelChainSelection: React.FC = () => {
                         ))}
                     </div>
                 ) : (
-                    <p className="text-center">Loading hotel chains...</p>
+                    <p className="text-center text-boba-silver text-lg">Loading hotel chains...</p>
                 )}
             </div>
         </div>
@@ -55,31 +55,37 @@ interface ChainBlockProps {
 
 const ChainBlock: React.FC<ChainBlockProps> = ({chain, onSelect}) =>{
     return (
-      <div className="w-full max-w-md border border-gray-200 rounded-lg p-3 bg-gray-50 hover:bg-gray-100 transition-colors">
-            <h2 className="mb-3 text-xl font-semibold text-boba-teal">
-                {chain.chain_name}
-            </h2>
-            <p className="">
-                <strong>Street:</strong> {chain.street || "N/A"}
-            </p>
-            <p className="">
-                <strong>City:</strong> {chain.city || "N/A"}
-            </p>
-            <p className="">
-                <strong>Zip Code:</strong> {chain.zip_code || "N/A"}
-            </p>
-            <p className="">
-                <strong>Country:</strong> {chain.country || "N/A"}
-            </p>
+        <div className="bg-boba-deep-teal border border-boba-slate rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
+            <div className="mb-3">
+                <h2 className="text-xl font-semibold text-boba-silver mb-2">
+                    {chain.chain_name}
+                </h2>
+            </div>
+
+            <div className="space-y-1 text-sm text-boba-silver">
+                <p>
+                    <strong>Street:</strong> {chain.street || "N/A"}
+                </p>
+                <p>
+                    <strong>City:</strong> {chain.city || "N/A"}
+                </p>
+                <p>
+                    <strong>Zip Code:</strong> {chain.zip_code || "N/A"}
+                </p>
+                <p>
+                    <strong>Country:</strong> {chain.country || "N/A"}
+                </p>
+            </div>
+
             <button
                 onClick={() => onSelect(chain)}
-                className="mt-3 px-4 py-2 h-12 bg-boba-blue-green text-white rounded hover:bg-boba-bg-hover transition-colors focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="mt-4 w-full px-4 py-2 bg-boba-blue-green text-white rounded hover:bg-boba-blue-green-hover transition-colors focus:outline-none focus:ring-2 focus:ring-boba-teal"
                 aria-label={`Select ${chain.chain_name}`}
             >
                 Select This Chain
             </button>
         </div>
-    )
+    );
 }
  
 export default HotelChainSelection;

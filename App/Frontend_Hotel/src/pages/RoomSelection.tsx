@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
-import { getHotelRooms, type Hotel } from "../api/hotels";
+import { getAvailableHotelRooms, type Hotel } from "../api/hotels";
 import { type Room } from "../api/room";
 import { type Booking, createBooking } from "../api/bookings";
 import { useCustomer } from "../context/CustomerContext";
+import { type Renting, createRenting } from "../api/renting";
 
 const RoomSelection: React.FC = () => {
     const { hotelId } = useParams<{ hotelId: string }>();
@@ -30,7 +31,7 @@ const RoomSelection: React.FC = () => {
     useEffect(() => {
         const fetchRooms = async () => {
             if (hotelId) {
-                const data = await getHotelRooms(Number(hotelId));
+                const data = await getAvailableHotelRooms(Number(hotelId));
                 setRooms(data);
                 setFilteredRooms(data);
                 console.log(data);
@@ -128,10 +129,6 @@ const RoomSelection: React.FC = () => {
         setShowBookConfirm(true);
     }
 
-    const handleRentSubmit = ()=>{
-
-    }
-
     const confirmBooking = async () => {
     if (!selectedRoom) return;
 
@@ -163,6 +160,46 @@ const RoomSelection: React.FC = () => {
         setShowBookConfirm(false);
         setSelectedRoom(null);
     };
+
+    const [showRentModal, setShowRentModal] = useState(false);
+    const [rentCheckIn, setRentCheckIn] = useState("");
+   
+        // Open modal from the room card
+    const handleRentSubmit = (room: Room) => {
+    setSelectedRoom(room);
+    setShowRentModal(true);
+    };
+
+    // Call this on submit
+    const confirmRenting = async () => {
+    if (!selectedRoom || !rentCheckIn) return;
+
+    try {
+        const rental: Renting = {
+        customer_id: Number(customerId),
+        customer_name: customer?.full_name || "unknown",
+        room_number: String(selectedRoom.room_number),
+        hotel_chain: chainName,
+        hotel: hotelName,
+        hotel_id: Number(hotelId),
+        price: selectedRoom.price || 0,
+        check_in_date: rentCheckIn,
+        check_out_date: undefined,
+        employee_id:1 ,
+        };
+
+        await createRenting(rental);
+
+        setShowRentModal(false);
+        setSelectedRoom(null);
+        setRentCheckIn("");
+        alert("Renting successful");
+    } catch (err) {
+        console.error(err);
+        alert("Renting failed");
+    }
+    };
+
 
     return (
         <div className="bg-white flex flex-col items-center p-6">
@@ -337,6 +374,33 @@ const RoomSelection: React.FC = () => {
                 </div>
             )}
 
+            {showRentModal && selectedRoom && (
+                <div className="fixed inset-0 bg-opacity-100 flex justify-center items-center z-50">
+                    <div className="bg-boba-deep-teal-hover p-6 rounded-lg shadow-lg max-w-md w-full">
+                    <h2 className="text-xl font-bold mb-4">Confirm Renting</h2>
+
+                    <p className="mb-4">Room: {selectedRoom.room_number}</p>
+
+                    <label className="block text-sm mb-2">Check-in date</label>
+                    <input
+                        type="date"
+                        value={rentCheckIn}
+                        onChange={(e) => setRentCheckIn(e.target.value)}
+                        className="w-full mb-4 px-3 py-2 rounded"
+                    />
+
+                    <div className="flex gap-3">
+                        <button onClick={confirmRenting} className="flex-1 bg-boba-blue-green-hover text-white py-2 rounded">
+                        Confirm
+                        </button>
+                        <button onClick={() => setShowRentModal(false)} className="flex-1 bg-boba-charcoal text-white py-2 rounded">
+                        Cancel
+                        </button>
+                    </div>
+                    </div>
+                </div>
+                )}
+
         </div>
     );
 };
@@ -395,13 +459,13 @@ const RoomBlock: React.FC<RoomBlockProps> = ({ room, handleSubmitBook, handleSub
                 >
                     Book
                 </button>
-                <button
+                {/* <button
                     onClick={() => {}}
                     className="flex-1 px-4 py-2 bg-boba-teal text-white rounded hover:bg-boba-teal-hover transition-colors focus:outline-none focus:ring-2 focus:ring-boba-mid-teal font-medium"
                     aria-label={`Rent Room ${room.room_number}`}
                 >
                     Rent
-                </button>
+                </button> */}
             </div>
         </div>
     );

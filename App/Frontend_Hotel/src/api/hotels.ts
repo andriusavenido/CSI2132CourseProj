@@ -89,6 +89,18 @@ export async function getHotelRooms(hotelId: number): Promise<any[]> {
     return data.rooms;
 }
 
+//get all available hotel rooms
+export async function getAvailableHotelRooms(hotelId: number): Promise<any[]> {
+    const response = await fetch(`${BASE_URL}/hotels/rooms/available/${hotelId}`);
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch hotel rooms");
+    }
+
+    const data: HotelRoomsResponse = await response.json();
+    return data.rooms;
+}
+
 
 //create hotel
 export async function createHotel(hotel: HotelCreate): Promise<Hotel> {

@@ -33,6 +33,7 @@ from SQL_Service_View import (
     fetch_hotel_total_capacity,
     get_employee_by_id,
     get_rentings_for_employee,
+    get_rooms_in_hotel_available
 )
 
 from SQL_Service_Delete import delete_booking as svc_delete_booking
@@ -164,6 +165,17 @@ async def get_hotel(hotel_id: int = None):
 
     if hotel_id:
         rooms = await get_rooms_in_hotel(hotel_id)
+    else:
+        rooms = []
+
+    return {"hotel_id": hotel_id, "rooms": rooms}
+
+"""Get available rooms for a specific hotel by ID."""
+@app.get("/hotels/rooms/available/{hotel_id}", tags=["Hotel"])
+async def get_hotel_available_rooms(hotel_id: int = None):
+
+    if hotel_id:
+        rooms = await get_rooms_in_hotel_available(hotel_id)
     else:
         rooms = []
 
