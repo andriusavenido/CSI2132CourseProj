@@ -117,7 +117,7 @@ async def get_employee_by_id(employee_id):
 # ------------------------------------------------------------------------------
 
 
-async def get_available_rooms_per_city():
+async def fetch_available_rooms_per_city():
     logger.info("Grab the custom view made from the database")
     query = "SELECT * FROM available_rooms_per_city;"
     async with db_pool.pool.acquire() as connection:
@@ -126,7 +126,7 @@ async def get_available_rooms_per_city():
         return [dict(result) for result in results]
 
 
-async def get_hotel_total_capacity():
+async def fetch_hotel_total_capacity():
     logger.info("Grab the custom view made from the database")
     query = "SELECT * FROM hotel_total_capacity;"
     async with db_pool.pool.acquire() as connection:

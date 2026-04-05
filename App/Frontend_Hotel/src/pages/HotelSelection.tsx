@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
 import { getHotels, type Hotel } from "../api/hotels";
+import RoomsPerCity from "../components/Customer/RoomsPerCity";
+import HotelCapacity from "../components/Customer/HotelCapacity";
 
 const HotelSelection: React.FC = () => {
     const { chainsId } = useParams<{ chainsId: string }>();
@@ -51,7 +53,7 @@ const HotelSelection: React.FC = () => {
     const handleSelectHotel = (hotel: Hotel) => {
         // Navigate to room selection with hotel info
         navigate(`/customer/hotels/${hotel.hotel_id}`, { 
-            state: { hotelName: `Hotel ${hotel.hotel_id}`, hotel: hotel } 
+            state: { hotelName: `Hotel ${hotel.hotel_id}`, hotel: hotel, chainName: chainName } 
         });
     };
 
@@ -133,6 +135,13 @@ const HotelSelection: React.FC = () => {
                     </div>
                 </div>
             </div>
+
+            <div className="flex">
+                {/** View Table */}
+                <RoomsPerCity></RoomsPerCity>
+                <HotelCapacity chainName={chainName}></HotelCapacity>
+            </div>
+            
 
             {/* Hotels Grid */}
             <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg">

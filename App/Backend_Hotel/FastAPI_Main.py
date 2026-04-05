@@ -29,8 +29,8 @@ from SQL_Service_View import (
     get_bookings_for_hotel,
     get_bookings_for_customer,
     get_customer_by_id,
-    get_available_rooms_per_city,
-    get_hotel_total_capacity,
+    fetch_available_rooms_per_city,
+    fetch_hotel_total_capacity,
     get_employee_by_id,
     get_rentings_for_employee,
 )
@@ -394,7 +394,7 @@ async def convert_booking_to_renting(booking_id: int, request: BookingToRentingR
 async def get_available_rooms_per_city():
     """Get hotels with available rooms."""
 
-    hotels_with_available_rooms = await get_available_rooms_per_city()
+    hotels_with_available_rooms = await fetch_available_rooms_per_city()
 
     return {"hotels_with_available_rooms": hotels_with_available_rooms}
 
@@ -403,7 +403,7 @@ async def get_available_rooms_per_city():
 async def get_hotel_total_capacity():
     """Get total capacity of hotels."""
 
-    hotel_total_capacity = await get_hotel_total_capacity()
+    hotel_total_capacity = await fetch_hotel_total_capacity()
 
     return {"hotel_total_capacity": hotel_total_capacity}
 

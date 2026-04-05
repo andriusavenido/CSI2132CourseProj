@@ -8,6 +8,7 @@ const RoomSelection: React.FC = () => {
     const location = useLocation();
     const hotelName = (location.state as any)?.hotelName || "Hotel";
     const hotelData = (location.state as any)?.hotel as Hotel | undefined;
+    const chainName = (location.state as any)?.chainName || "Hotel";
 
     const [rooms, setRooms] = useState<Room[] | null>(null);
     const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
@@ -123,44 +124,13 @@ const RoomSelection: React.FC = () => {
     return (
         <div className="bg-white flex flex-col items-center p-6">
             <h1 className="mb-2 text-3xl font-bold text-boba-silver">
-                {hotelName}
+               {chainName}: {hotelName}
             </h1>
             <p className="mb-6 text-lg text-boba-mid-teal">
                 Room Selection
             </p>
 
-            {/* Booking/Renting Details Section */}
-            <div className="w-full max-w-6xl mb-6">
-                <div className="bg-boba-deep-teal p-6 rounded-lg shadow-lg">
-                    <h3 className="text-white font-bold mb-4">Booking/Renting Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm text-boba-silver mb-2">
-                                Check-in Date
-                            </label>
-                            <input
-                                type="date"
-                                value={checkInDate}
-                                onChange={(e) => setCheckInDate(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-boba-silver mb-2">
-                                Check-out Date
-                            </label>
-                            <input
-                                type="date"
-                                value={checkOutDate}
-                                onChange={(e) => setCheckOutDate(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Filters Section */}
+                {/* Filters Section */}
             <div className="w-full max-w-6xl mb-6">
                 <div className="bg-boba-deep-teal p-6 rounded-lg shadow-lg">
                     <h3 className="text-white font-bold mb-4">Filter Rooms</h3>
@@ -267,8 +237,42 @@ const RoomSelection: React.FC = () => {
                 </div>
             </div>
 
+            {/* Booking/Renting Details Section */}
+            <div className="w-full max-w-6xl mb-6">
+                <div className="bg-boba-deep-teal p-6 rounded-lg shadow-lg">
+                    <h3 className="text-white font-bold mb-4">Booking/Renting Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label className="block text-sm text-boba-silver mb-2">
+                                Check-in Date
+                            </label>
+                            <input
+                                type="date"
+                                value={checkInDate}
+                                onChange={(e) => setCheckInDate(e.target.value)}
+                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm text-boba-silver mb-2">
+                                Check-out Date
+                            </label>
+                            <input
+                                type="date"
+                                value={checkOutDate}
+                                onChange={(e) => setCheckOutDate(e.target.value)}
+                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+
             {/* Rooms Grid */}
             <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg overflow-y">
+                <h2 className=""></h2>
                 {filteredRooms.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
                         {filteredRooms.map((room) => (
