@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router";
 import { getHotelRooms, type Hotel } from "../api/hotels";
 import { type Room } from "../api/room";
+import { type Booking, createBooking } from "../api/bookings";
+import { useCustomer } from "../context/CustomerContext";
 
 const RoomSelection: React.FC = () => {
     const { hotelId } = useParams<{ hotelId: string }>();
@@ -12,10 +14,6 @@ const RoomSelection: React.FC = () => {
 
     const [rooms, setRooms] = useState<Room[] | null>(null);
     const [filteredRooms, setFilteredRooms] = useState<Room[]>([]);
-
-    // Booking/Renting Details states
-    const [checkInDate, setCheckInDate] = useState("");
-    const [checkOutDate, setCheckOutDate] = useState("");
     
     // Filter states
     const [selectedCapacities, setSelectedCapacities] = useState<number[]>([]);
@@ -23,6 +21,8 @@ const RoomSelection: React.FC = () => {
     const [selectedViews, setSelectedViews] = useState<string[]>([]);
     const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
     const [includeBedExtension, setIncludeBedExtension] = useState(false);
+
+    const {customerId,customer} = useCustomer();
 
     const navigate = useNavigate();
 
@@ -120,6 +120,49 @@ const RoomSelection: React.FC = () => {
 
     const minPrice = Math.min(...(rooms?.map((r) => r.price || 0) || [0]));
     const maxPrice = Math.max(...(rooms?.map((r) => r.price || 1000) || [1000]));
+
+    const [showBookConfirm, setShowBookConfirm] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+    const handleBookingSubmit = (room: Room)=>{
+        setSelectedRoom(room);
+        setShowBookConfirm(true);
+    }
+
+    const handleRentSubmit = ()=>{
+
+    }
+
+    const confirmBooking = async () => {
+    if (!selectedRoom) return;
+
+    try {
+        const booking: Booking = {
+            customer_id: Number(customerId), // replace with actual logged-in user
+            customer_name: customer?.full_name ||"unknwon",
+            room_number: String(selectedRoom.room_number),
+            hotel_chain: chainName,
+            hotel: hotelName,
+            hotel_id: Number(hotelId),
+            price: selectedRoom.price || 0,
+            status: "Booked",
+        };
+
+        await createBooking(booking);
+
+        setShowBookConfirm(false);
+        setSelectedRoom(null);
+
+        alert("Booking successful");
+    } catch (err) {
+        console.error(err);
+        alert("Booking failed");
+    }
+    };
+
+    const cancelBooking = () => {
+        setShowBookConfirm(false);
+        setSelectedRoom(null);
+    };
 
     return (
         <div className="bg-white flex flex-col items-center p-6">
@@ -236,40 +279,7 @@ const RoomSelection: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            {/* Booking/Renting Details Section */}
-            <div className="w-full max-w-6xl mb-6">
-                <div className="bg-boba-deep-teal p-6 rounded-lg shadow-lg">
-                    <h3 className="text-white font-bold mb-4">Booking/Renting Details</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label className="block text-sm text-boba-silver mb-2">
-                                Check-in Date
-                            </label>
-                            <input
-                                type="date"
-                                value={checkInDate}
-                                onChange={(e) => setCheckInDate(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            />
-                        </div>
-                        <div>
-                            <label className="block text-sm text-boba-silver mb-2">
-                                Check-out Date
-                            </label>
-                            <input
-                                type="date"
-                                value={checkOutDate}
-                                onChange={(e) => setCheckOutDate(e.target.value)}
-                                className="w-full px-3 py-2 bg-boba-charcoal text-boba-silver border border-boba-slate rounded focus:outline-none focus:ring-2 focus:ring-boba-blue-green"
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         
-
             {/* Rooms Grid */}
             <div className="w-full max-w-6xl bg-boba-bg p-6 rounded-lg overflow-y">
                 <h2 className=""></h2>
@@ -279,6 +289,8 @@ const RoomSelection: React.FC = () => {
                             <RoomBlock
                                 key={`${room.hotel_id}-${room.room_number}`}
                                 room={room}
+                                handleSubmitBook={handleBookingSubmit}
+                                handleSubmitRent={handleRentSubmit}
                             />
                         ))}
                     </div>
@@ -292,15 +304,51 @@ const RoomSelection: React.FC = () => {
                     </p>
                 )}
             </div>
+
+                        {showBookConfirm && selectedRoom && (
+                <div className="fixed inset-0 bg-opacity-100 flex justify-center items-center z-50">
+                    <div className="bg-boba-deep-teal-hover p-6 rounded-lg shadow-lg max-w-md w-full">
+                        <h2 className="text-xl font-bold mb-4">
+                            Confirm Booking
+                        </h2>
+
+                        <p className="mb-2">
+                            Room: {selectedRoom.room_number}
+                        </p>
+                        <p className="mb-4">
+                            Price: ${selectedRoom.price}/night
+                        </p>
+
+                        <div className="flex gap-3">
+                            <button
+                                onClick={confirmBooking}
+                                className="flex-1 bg-boba-blue-green-hover text-white py-2 rounded"
+                            >
+                                Confirm
+                            </button>
+                            <button
+                                onClick={cancelBooking}
+                                className="flex-1 bg-boba-charcoal text-white py-2 rounded"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };
 
 interface RoomBlockProps {
     room: Room;
+    handleSubmitBook: (room: Room) =>void;
+    handleSubmitRent: (roomn: Room) => void
+
 }
 
-const RoomBlock: React.FC<RoomBlockProps> = ({ room }) => {
+const RoomBlock: React.FC<RoomBlockProps> = ({ room, handleSubmitBook, handleSubmitRent }) => {
     return (
         <div className="bg-boba-deep-teal border border-boba-slate rounded-lg p-4 shadow-lg hover:shadow-xl transition-shadow">
             <div className="mb-3">
@@ -341,7 +389,7 @@ const RoomBlock: React.FC<RoomBlockProps> = ({ room }) => {
 
             <div className="flex gap-3">
                 <button
-                    onClick={() => {}}
+                    onClick={() => handleSubmitBook(room)}
                     className="flex-1 px-4 py-2 bg-boba-blue-green text-white rounded hover:bg-boba-blue-green-hover transition-colors focus:outline-none focus:ring-2 focus:ring-boba-teal font-medium"
                     aria-label={`Book Room ${room.room_number}`}
                 >
