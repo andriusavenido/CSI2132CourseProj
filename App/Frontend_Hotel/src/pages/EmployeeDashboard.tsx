@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
-import { getHotelRooms } from '../api/hotels';
+import { getAvailableHotelRooms } from '../api/hotels';
 import { getEmployeeBookings, getEmployeeRentings } from '../api/employee';
 import type { Employee } from '../api/employee';
 import DashboardHeader, { type Tab } from '../components/Employee/DashboardHeader';
@@ -37,7 +37,7 @@ const EmployeeDashboard: React.FC = () => {
     useEffect(() => {
         if (!hotelId) return;
         setLoadingRooms(true);
-        getHotelRooms(hotelId)
+        getAvailableHotelRooms(hotelId)
             .then(data => setRooms(data ?? []))
             .catch(() => setRooms([]))
             .finally(() => setLoadingRooms(false));
