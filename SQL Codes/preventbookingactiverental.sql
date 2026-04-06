@@ -9,7 +9,6 @@ BEGIN
           AND r.hotel_chain = NEW.hotel_chain
           AND r.hotel_id = NEW.hotel_id
         AND r.check_out_date IS NULL
-
               
     ) THEN
         RAISE EXCEPTION 'Cannot create booking: room is currently rented or overlaps with an active renting';

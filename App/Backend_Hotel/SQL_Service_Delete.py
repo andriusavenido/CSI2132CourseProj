@@ -11,7 +11,7 @@ async def delete_booking(booking_id):
     """
     query = """
         DELETE FROM booking
-        WHERE id = $1
+        WHERE booking_id = $1
         RETURNING *;
     """
     async with db_pool.pool.acquire() as connection:

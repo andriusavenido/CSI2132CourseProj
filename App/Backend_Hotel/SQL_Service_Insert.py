@@ -256,7 +256,7 @@ async def booking_to_renting(
         RETURNING *;
     """
     update_booking_query = (
-        "UPDATE booking SET status = 'completed' WHERE booking_id = $1;"
+        "UPDATE booking SET status = 'Completed' WHERE booking_id = $1;"
     )
 
     async with db_pool.pool.acquire() as connection:
